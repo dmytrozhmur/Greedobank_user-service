@@ -21,7 +21,11 @@ public class HttpRequestTest {
 
     @Test
     public void getUserListReturnsDefaultMessage() {
-        assertThat(this.restTemplate.getForObject(String.format("http://localhost:%d/api/v1/users", port),
-                String.class)).contains("Empty user list");
+        assertThat(
+                this.restTemplate
+                        .getForObject(String
+                                .format("http://localhost:%d/api/v1/users", port), String.class))
+                .contains("dzhmur@griddynamics.com", "ykomiahina@griddynamics.com",
+                        "okukurik@girddynamics.com", "isubota@griddynamics.com", "tkomarova@griddynamics.com");
     }
 }

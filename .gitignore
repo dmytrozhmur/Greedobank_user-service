@@ -1,4 +1,5 @@
 *.log
 **/logs
 .idea
+*.patch
 HELP.md
