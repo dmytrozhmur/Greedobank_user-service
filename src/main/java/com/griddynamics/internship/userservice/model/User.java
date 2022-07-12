@@ -1,10 +1,11 @@
 package com.griddynamics.internship.userservice.model;
 
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import javax.persistence.*;
+
+import java.util.Objects;
+
+import static com.griddynamics.internship.userservice.utils.Encryptor.encrypt;
 
 @Entity
 @Table(name = "user")
@@ -52,8 +53,22 @@ public class User {
     }
 
     public void setPassword(String password) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode(password);
-        this.password = encodedPassword;
+        this.password = encrypt(password);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 43 * id;
+        hash += email == null ? 0 : email.length();
+        return hash;
     }
 }
