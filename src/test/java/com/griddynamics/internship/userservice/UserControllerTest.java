@@ -11,7 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class HttpRequestTest {
+public class UserControllerTest {
 
     @LocalServerPort
     private int port;
