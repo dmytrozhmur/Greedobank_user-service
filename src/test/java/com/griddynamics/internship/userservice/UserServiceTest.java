@@ -6,18 +6,14 @@ import com.griddynamics.internship.userservice.model.UserRepository;
 import com.griddynamics.internship.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -25,15 +21,15 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-    @Mock
+    @MockBean
     private UserRepository userRepository;
+    @Autowired
     private UserService userService;
 
     @Test
     public void getAllUsers() {
         Collection<UserDTO> expected = getExpected();
 
-        userService = new UserService(userRepository);
         List<User> mockedUsers = new ArrayList<>(Arrays.asList(
                 new User(6, "Dima", "Zhmur", "dzhmur@griddynamics.com", "abcde1"),
                 new User(7, "Zhenya", "Komiahina", "ykomiahina@griddynamics.com", "fghij2")
@@ -42,7 +38,7 @@ public class UserServiceTest {
 
         Collection<UserDTO> actual = userService.findAll();
 
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository).findAll();
         assertThat(actual, is(expected));
     }
 
