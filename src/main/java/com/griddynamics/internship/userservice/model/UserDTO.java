@@ -1,12 +1,19 @@
 package com.griddynamics.internship.userservice.model;
 
-import javax.persistence.Column;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import javax.validation.constraints.*;
 import java.util.Objects;
 
+@Schema(name = "user", description = "user data")
 public class UserDTO {
+    @NotNull
     private int id;
+    @NotBlank @Size(min = 1, max = 45)
     private String firstName;
+    @NotBlank @Size(min = 1, max = 45)
     private String lastName;
+    @NotBlank @Email
     private String email;
 
     public UserDTO(int id, String firstName, String lastName, String email) {
