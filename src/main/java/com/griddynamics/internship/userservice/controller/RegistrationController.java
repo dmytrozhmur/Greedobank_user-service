@@ -3,10 +3,9 @@ package com.griddynamics.internship.userservice.controller;
 import com.griddynamics.internship.userservice.controller.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.controller.exception.InvalidFieldException;
 import com.griddynamics.internship.userservice.controller.request.SignupRequest;
+import com.griddynamics.internship.userservice.controller.response.ErrorResponse;
 import com.griddynamics.internship.userservice.controller.response.MessageResponse;
-import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.service.UserService;
-import com.griddynamics.internship.userservice.utils.Response;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLException;
 
 import static com.griddynamics.internship.userservice.utils.Response.SUCCESS;
 
@@ -53,10 +54,10 @@ public class RegistrationController {
                 .body(new MessageResponse(exception.getMessage()));
     }
 
-    @ExceptionHandler({InvalidFieldException.class, MysqlDataTruncation.class})
+    @ExceptionHandler({InvalidFieldException.class, SQLException.class})
     public ResponseEntity<?> fieldFormatError(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new MessageResponse(exception.getMessage()));
+                .body(new ErrorResponse(exception.getMessage()));
     }
 }
