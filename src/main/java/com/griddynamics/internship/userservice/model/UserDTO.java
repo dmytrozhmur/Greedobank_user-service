@@ -13,7 +13,7 @@ public class UserDTO {
     private String firstName;
     @NotBlank @Size(min = 1, max = 45)
     private String lastName;
-    @NotBlank @Email
+    @NotBlank @Size(max = 60) @Email
     private String email;
 
     public UserDTO(int id, String firstName, String lastName, String email) {
@@ -67,13 +67,11 @@ public class UserDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDTO userDTO = (UserDTO) o;
-        return id == userDTO.id && Objects.equals(firstName, userDTO.firstName) && Objects.equals(lastName, userDTO.lastName) && Objects.equals(email, userDTO.email);
+        return Objects.equals(firstName, userDTO.firstName) && Objects.equals(lastName, userDTO.lastName) && Objects.equals(email, userDTO.email);
     }
 
     @Override
     public int hashCode() {
-        int hash = 43 * id;
-        hash += email == null ? 0 : email.length();
-        return hash;
+        return 43 * (email == null ? 0 : email.length());
     }
 }

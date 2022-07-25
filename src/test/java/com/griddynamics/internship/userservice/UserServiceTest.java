@@ -1,5 +1,6 @@
 package com.griddynamics.internship.userservice;
 
+import com.griddynamics.internship.userservice.controller.request.SignupRequest;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.model.UserRepository;
@@ -31,8 +32,10 @@ public class UserServiceTest {
         Collection<UserDTO> expected = getExpected();
 
         List<User> mockedUsers = new ArrayList<>(Arrays.asList(
-                new User(6, "Dima", "Zhmur", "dzhmur@griddynamics.com", "abcde1"),
-                new User(7, "Zhenya", "Komiahina", "ykomiahina@griddynamics.com", "fghij2")
+                new User(new SignupRequest(
+                        "Dmytro", "Zhmur", "dzhmur@griddynamics.com", "password")),
+                new User(new SignupRequest(
+                        "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", "password"))
         ));
         when(userRepository.findAll()).thenReturn(mockedUsers);
 
@@ -44,8 +47,8 @@ public class UserServiceTest {
 
     private Collection<UserDTO> getExpected() {
         return new ArrayList<>(Arrays.asList(
-                new UserDTO(6, "Dima", "Zhmur", "dzhmur@griddynamics.com"),
-                new UserDTO(7, "Zhenya", "Komiahina", "ykomiahina@griddynamics.com")
+                new UserDTO(135, "Dmytro", "Zhmur", "dzhmur@griddynamics.com"),
+                new UserDTO(87, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com")
         ));
     }
 }

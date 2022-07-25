@@ -1,30 +1,42 @@
 package com.griddynamics.internship.userservice.model;
 
 
+import com.griddynamics.internship.userservice.controller.request.SignupRequest;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
 
 import java.util.Objects;
 
-import static com.griddynamics.internship.userservice.utils.Encryptor.encrypt;
-
 @Entity
 @Table(name = "user")
 public class User {
-    @Id @GeneratedValue(strategy= GenerationType.AUTO) @Column(name = "id") private int id;
+    @Id
+    @GeneratedValue(generator = "sequence-generator")
+    @GenericGenerator(
+            name = "sequence-generator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "user_sequence"),
+                    @Parameter(name = "initial_value", value = "6"),
+                    @Parameter(name = "increment_size", value = "1")
+            }
+    )
+    @Column(name = "id") private int id;
     @Column(name = "firstname") private String firstName;
     @Column(name = "lastname") private String lastName;
     @Column(name = "email") private String email;
     @Column(name = "password") private String password;
 
-    public User() {
-    }
 
-    public User(int id, String firstName, String lastName, String email, String password) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
+    protected User() {}
+
+    public User(SignupRequest signup) {
+        this.firstName = signup.getFirstName();
+        this.lastName = signup.getLastName();
+        this.email = signup.getEmail();
+        this.password = signup.getPassword();
     }
 
     public int getId() {
@@ -39,32 +51,16 @@ public class User {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = encrypt(password);
     }
 
     @Override
@@ -72,14 +68,13 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName)
-                && Objects.equals(email, user.email) && Objects.equals(password, user.password);
+        return Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        int hash = 43 * id;
-        hash += email == null ? 0 : email.length();
-        return hash;
+        return 43 * (email == null ? 0 : email.length());
     }
 }
