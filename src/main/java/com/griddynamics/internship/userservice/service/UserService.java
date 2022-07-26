@@ -1,8 +1,7 @@
 package com.griddynamics.internship.userservice.service;
 
-import com.griddynamics.internship.userservice.controller.exception.EmailExistsException;
-import com.griddynamics.internship.userservice.controller.exception.InvalidFieldException;
-import com.griddynamics.internship.userservice.controller.request.SignupRequest;
+import com.griddynamics.internship.userservice.controller.auth.exception.EmailExistsException;
+import com.griddynamics.internship.userservice.controller.auth.request.SignupRequest;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.model.UserRepository;
@@ -13,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static com.griddynamics.internship.userservice.utils.FieldValidation.*;
-import static com.griddynamics.internship.userservice.utils.Response.*;
+import static com.griddynamics.internship.userservice.utils.Responses.EMAIL_IN_USE;
 
 @Service
 public class UserService {
@@ -35,26 +33,11 @@ public class UserService {
     }
 
     public void registerUser(SignupRequest signup) {
-        checkRequest(signup);
+        if(userRepository.findByEmail(signup.getEmail()) != null)
+            throw new EmailExistsException(EMAIL_IN_USE);
         signup.setPassword(passwordEncoder.encode(signup.getPassword()));
 
         User newUser = new User(signup);
         userRepository.save(newUser);
-    }
-
-    private void checkRequest(SignupRequest signup) {
-        String email = signup.getEmail();
-        if(userRepository.findByEmail(email) != null) {
-            throw new EmailExistsException(EMAIL_IN_USE);
-        }
-
-        if(!email.matches(EMAIL_PATTERN)) {
-            throw new InvalidFieldException(INCORRECT_EMAIL_FORMAT);
-        }
-
-        int passwordLength = signup.getPassword().length();
-        if(passwordLength < PASSWORD_MIN_LENGTH || PASSWORD_MAX_LENGTH < passwordLength) {
-            throw new InvalidFieldException(INVALID_PASSWORD_LENGTH);
-        }
     }
 }

@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice.model;
 
 
-import com.griddynamics.internship.userservice.controller.request.SignupRequest;
+import com.griddynamics.internship.userservice.controller.auth.request.SignupRequest;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice;
 
-import com.griddynamics.internship.userservice.controller.request.SignupRequest;
+import com.griddynamics.internship.userservice.controller.auth.request.SignupRequest;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.model.UserRepository;
