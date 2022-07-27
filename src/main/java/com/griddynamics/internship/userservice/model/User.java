@@ -33,11 +33,11 @@ public class User {
 
     protected User() {}
 
-    public User(SignupRequest signup) {
+    public User(SignupRequest signup, String password) {
         this.firstName = signup.getFirstName();
         this.lastName = signup.getLastName();
         this.email = signup.getEmail();
-        this.password = signup.getPassword();
+        this.password = password;
     }
 
     @Override

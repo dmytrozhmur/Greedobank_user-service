@@ -35,9 +35,10 @@ public class UserService {
     public void registerUser(SignupRequest signup) {
         if(userRepository.findByEmail(signup.getEmail()) != null)
             throw new EmailExistsException(EMAIL_IN_USE);
-        signup.setPassword(passwordEncoder.encode(signup.getPassword()));
 
-        User newUser = new User(signup);
+        String encodedPassword = passwordEncoder.encode(signup.getPassword());
+
+        User newUser = new User(signup, encodedPassword);
         userRepository.save(newUser);
     }
 }

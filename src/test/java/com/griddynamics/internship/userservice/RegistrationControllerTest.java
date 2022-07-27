@@ -24,7 +24,7 @@ public class RegistrationControllerTest {
     private static final String TEST_PASSWORD = "password";
     public static final String USED_EMAIL = "dzhmur@griddynamics.com";
     private static final User EXISTING_ENTITY = new User(
-            new SignupRequest(TEST_FIRST_NAME, TEST_LAST_NAME, USED_EMAIL, TEST_PASSWORD));
+            new SignupRequest(TEST_FIRST_NAME, TEST_LAST_NAME, USED_EMAIL), TEST_PASSWORD);
 
     @LocalServerPort
     private int port;
@@ -39,25 +39,40 @@ public class RegistrationControllerTest {
     public void signupSuccess() {
         when(userRepository.findByEmail(USED_EMAIL)).thenReturn(EXISTING_ENTITY);
 
-        assertThat(getActualResponse(new SignupRequest(
+        String actual = getActualResponse(new SignupRequest(
                 TEST_FIRST_NAME, TEST_LAST_NAME, TEST_EMAIL, TEST_PASSWORD
-        ))).contains(SUCCESS);
+        ));
+
+        assertThat(actual).contains(SUCCESS);
         verify(userRepository, times(0)).findByEmail(USED_EMAIL);
         verify(userRepository).findByEmail(TEST_EMAIL);
     }
 
     @Test
-    public void signupFailure() {
+    public void signupInvalidField() {
         when(userRepository.findByEmail(USED_EMAIL)).thenReturn(EXISTING_ENTITY);
 
-        assertThat(getActualResponse(new SignupRequest(
-                TEST_FIRST_NAME, TEST_LAST_NAME, USED_EMAIL, TEST_PASSWORD
-        ))).contains(EMAIL_IN_USE);
-        assertThat(getActualResponse(new SignupRequest(
+        String actual = getActualResponse(new SignupRequest(
                 "", "Zibrov",
                 "svjndsglvnlngjbkmgfblkghbfkdjnfdvjlmrlmtbkrtb@gmail.u", "pass"
-        ))).contains(EMPTY_FIELD, EXCEEDED_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
+        ));
+
+        assertThat(actual).contains(EMPTY_FIELD, EXCEEDED_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
+        verify(userRepository, times(0)).findByEmail(USED_EMAIL);
+        verify(userRepository, times(0)).findByEmail(TEST_EMAIL);
+    }
+
+    @Test
+    public void signupExistingEmail() {
+        when(userRepository.findByEmail(USED_EMAIL)).thenReturn(EXISTING_ENTITY);
+
+        String actual = getActualResponse(new SignupRequest(
+                TEST_FIRST_NAME, TEST_LAST_NAME, USED_EMAIL, TEST_PASSWORD
+        ));
+
+        assertThat(actual).contains(EMAIL_IN_USE);
         verify(userRepository).findByEmail(USED_EMAIL);
+        verify(userRepository, times(0)).findByEmail(TEST_EMAIL);
     }
 
     private String getActualResponse(SignupRequest signupRequest) {
