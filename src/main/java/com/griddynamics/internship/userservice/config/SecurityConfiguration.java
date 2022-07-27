@@ -21,7 +21,7 @@ public class SecurityConfiguration {
         return http
                 .cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users").permitAll()
+                .antMatchers("/api/v1/users").authenticated()
                 .and()
                 .formLogin().permitAll().defaultSuccessUrl("/api/v1/users")
                 .and()

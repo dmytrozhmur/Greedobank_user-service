@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.service;
+package com.griddynamics.internship.userservice.model;
 
 import com.griddynamics.internship.userservice.model.User;
 import org.springframework.security.core.GrantedAuthority;

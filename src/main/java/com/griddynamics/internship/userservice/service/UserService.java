@@ -1,7 +1,9 @@
 package com.griddynamics.internship.userservice.service;
 
+import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.repo.UserRepository;
@@ -32,12 +34,16 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void registerUser(SignupRequest signup) {
+    public void createUser(SignupRequest signup) {
         if(userRepository.findByEmail(signup.getEmail()) != null)
             throw new EmailExistsException(EMAIL_IN_USE);
         signup.setPassword(passwordEncoder.encode(signup.getPassword()));
 
         User newUser = new User(signup);
         userRepository.save(newUser);
+    }
+
+    public JwtUser getJwtResponse(SigninRequest signin) {
+        return null;
     }
 }

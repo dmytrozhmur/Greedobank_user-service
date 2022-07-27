@@ -39,19 +39,21 @@ public class RegistrationController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class)))
     })
-    public ResponseEntity<JsonResponse<String>> registerUser(@RequestBody @Valid SignupRequest signupRequest) {
-        userService.registerUser(signupRequest);
+    public ResponseEntity<JsonResponse<String>> registerUser(
+            @RequestBody @Valid SignupRequest signupRequest) {
+        userService.createUser(signupRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new JsonResponse<>(SUCCESS));
     }
 
     @ExceptionHandler(EmailExistsException.class)
-    public ResponseEntity<JsonResponse<String>> emailRepetitionError(EmailExistsException exception) {
+    public ResponseEntity<JsonResponse<String>> emailRepetitionError(
+            EmailExistsException exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new JsonResponse<>(FAILURE, Collections.singletonMap(
-                        "email", new String[]{EMAIL_IN_USE}
+                        "email", new String[]{exception.getMessage()}
                 )));
     }
 }
