@@ -56,20 +56,4 @@ public class RegistrationController {
                         "email", new String[] { EMAIL_IN_USE }
                 )));
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> notValidFieldError(MethodArgumentNotValidException exception) {
-        Map<String, String[]> errors = new LinkedHashMap<>();
-        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-
-        fieldErrors.stream()
-                .collect(groupingBy(FieldError::getField))
-                .forEach((name, list) -> errors.put(name, list.stream()
-                                .map(FieldError::getDefaultMessage)
-                                .toArray(String[]::new)));
-
-        return ResponseEntity
-                .badRequest()
-                .body(new JsonResponse(FAILURE, errors));
-    }
 }
