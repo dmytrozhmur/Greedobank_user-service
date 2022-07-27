@@ -1,14 +1,14 @@
 package com.griddynamics.internship.userservice.communication.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 
+
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class SignupRequest {
@@ -17,16 +17,16 @@ public class SignupRequest {
 
     @NotBlank(message = EMPTY_FIELD)
     @Size(max = 45, message = EXCEEDED_SIZE)
-    private final String firstName;
+    @NonNull private String firstName;
 
     @NotBlank(message = EMPTY_FIELD)
     @Size(max = 45, message = EXCEEDED_SIZE)
-    private final String lastName;
+    @NonNull private String lastName;
 
     @NotBlank(message = EMPTY_FIELD)
     @Size(max = 45, message = EXCEEDED_SIZE)
     @Email(regexp = EMAIL_PATTERN, message = INCORRECT_FORMAT)
-    private final String email;
+    @NonNull private String email;
 
     @Size(min = 8, max = 20, message = INVALID_PASSWORD_LENGTH)
     private String password;
