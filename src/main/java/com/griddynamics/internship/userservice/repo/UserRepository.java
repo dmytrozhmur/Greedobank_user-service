@@ -1,5 +1,6 @@
-package com.griddynamics.internship.userservice.model;
+package com.griddynamics.internship.userservice.repo;
 
+import com.griddynamics.internship.userservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Integer> {

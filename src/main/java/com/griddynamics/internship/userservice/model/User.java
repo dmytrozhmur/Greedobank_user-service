@@ -1,7 +1,8 @@
 package com.griddynamics.internship.userservice.model;
 
 
-import com.griddynamics.internship.userservice.controller.request.SignupRequest;
+import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 
 import java.util.Objects;
 
+@Getter
 @Entity
 @Table(name = "user")
 public class User {
@@ -29,7 +31,6 @@ public class User {
     @Column(name = "email") private String email;
     @Column(name = "password") private String password;
 
-
     protected User() {}
 
     public User(SignupRequest signup) {
@@ -37,30 +38,6 @@ public class User {
         this.lastName = signup.getLastName();
         this.email = signup.getEmail();
         this.password = signup.getPassword();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override
