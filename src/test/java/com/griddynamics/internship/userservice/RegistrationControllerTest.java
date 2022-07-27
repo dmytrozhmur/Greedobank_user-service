@@ -1,8 +1,8 @@
 package com.griddynamics.internship.userservice;
 
-import com.griddynamics.internship.userservice.controller.auth.request.SignupRequest;
+import com.griddynamics.internship.userservice.communication.request.SignupRequest;
 import com.griddynamics.internship.userservice.model.User;
-import com.griddynamics.internship.userservice.model.UserRepository;
+import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import static com.griddynamics.internship.userservice.utils.Responses.*;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.hamcrest.MatcherAssert.assertThat;

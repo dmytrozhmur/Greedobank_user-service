@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice.utils;
 
-public class Responses {
+public class ResponseMessages {
     public static final String SUCCESS = "User registered successfully!";
     public static final String FAILURE = "User wasn't registered!";
     public static final String INCORRECT_FORMAT = "incorrect format";

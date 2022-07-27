@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.controller.auth.response;
+package com.griddynamics.internship.userservice.communication.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -9,11 +9,11 @@ import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+@Getter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class JsonResponse {
-    public final String message;
+public class JsonResponse<T> {
+    @NonNull private T content;
 
-    @Getter
     @JsonInclude(Include.NON_NULL) private Map<String, String[]> errors;
 }

@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.controller.auth.exception;
+package com.griddynamics.internship.userservice.exception;
 
 public class EmailExistsException extends RuntimeException {
     public EmailExistsException(String message) {
