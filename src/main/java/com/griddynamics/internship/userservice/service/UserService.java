@@ -6,8 +6,14 @@ import com.griddynamics.internship.userservice.communication.request.SignupReque
 import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
+import com.griddynamics.internship.userservice.model.UserDetailsImpl;
 import com.griddynamics.internship.userservice.repo.UserRepository;
+import com.griddynamics.internship.userservice.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +28,8 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public UserService(@Autowired UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -45,6 +53,16 @@ public class UserService {
     }
 
     public JwtUser getJwtResponse(SigninRequest signin) {
-        return null;
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(signin.getEmail(), signin.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        String token = JwtUtils.generateToken(auth);
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+
+        return new JwtUser(
+                token, userDetails.getId(), userDetails.getEmail(), userDetails.getUsername()
+        );
     }
 }

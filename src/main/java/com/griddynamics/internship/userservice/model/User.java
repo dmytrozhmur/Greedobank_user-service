@@ -12,7 +12,6 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
-@EqualsAndHashCode
 @Entity
 @Table(name = "user")
 public class User {

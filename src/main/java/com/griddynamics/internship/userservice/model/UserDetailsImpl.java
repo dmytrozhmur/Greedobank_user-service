@@ -13,6 +13,14 @@ public class UserDetailsImpl implements UserDetails {
         this.user = user;
     }
 
+    public long getId() {
+        return user.getId();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -25,7 +33,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return (user.getFirstName() + user.getLastName()).toLowerCase();
     }
 
     @Override
@@ -46,9 +54,5 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public String getFullName() {
-        return user.getFirstName() + " " + user.getLastName();
     }
 }
