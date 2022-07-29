@@ -33,9 +33,9 @@ public class UserServiceTest {
 
         List<User> mockedUsers = new ArrayList<>(Arrays.asList(
                 new User(new SignupRequest(
-                        "Dmytro", "Zhmur", "dzhmur@griddynamics.com", "password")),
+                        "Dmytro", "Zhmur", "dzhmur@griddynamics.com"), "password"),
                 new User(new SignupRequest(
-                        "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", "password"))
+                        "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com"), "password")
         ));
         when(userRepository.findAll()).thenReturn(mockedUsers);
 
