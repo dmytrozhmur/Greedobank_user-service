@@ -45,7 +45,7 @@ public class GlobalExceptionController {
                 .internalServerError()
                 .body(new JsonResponse<>(UNEXPECTED, Collections.singletonMap(
                         exception.getClass().getSimpleName().toLowerCase(),
-                        new String[]{exception.getMessage()}
+                        exception.getMessage().split(";")
                 )));
     }
 }

@@ -6,6 +6,10 @@ import com.griddynamics.internship.userservice.exception.AuthenticationException
 import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +28,17 @@ public class AuthenticationController {
 
     @PostMapping("/api/v1/signin")
     @Operation(summary = "Authenticate user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User authenticated",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JsonResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Authentication failed",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JsonResponse.class))),
+            @ApiResponse(responseCode = "422", description = "Invalid email or password",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JsonResponse.class)))
+    })
     public ResponseEntity<JsonResponse<JwtUser>> authenticateUser(
             @RequestBody @Valid SigninRequest signinRequest) {
         JwtUser jwtUser = userService.getJwtResponse(signinRequest);
