@@ -20,11 +20,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthTokenFilter authenticationJwtFilter() {
-        return new AuthTokenFilter();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors().and().csrf().disable()
@@ -32,7 +27,6 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/**").permitAll()
                 .and()
                 .logout().permitAll();
-        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

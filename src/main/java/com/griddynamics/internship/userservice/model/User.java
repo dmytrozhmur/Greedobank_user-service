@@ -2,7 +2,6 @@ package com.griddynamics.internship.userservice.model;
 
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

@@ -38,14 +38,4 @@ public class GlobalExceptionController {
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(new JsonResponse<>(INVALID_BODY));
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<JsonResponse<String>> unknownError(Exception exception) {
-        return ResponseEntity
-                .internalServerError()
-                .body(new JsonResponse<>(UNEXPECTED, Collections.singletonMap(
-                        exception.getClass().getSimpleName().toLowerCase(),
-                        exception.getMessage().split(";")
-                )));
-    }
 }

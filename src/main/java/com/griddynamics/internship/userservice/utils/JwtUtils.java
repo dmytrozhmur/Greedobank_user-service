@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice.utils;
 
-import com.griddynamics.internship.userservice.model.UserDetailsImpl;
+import com.griddynamics.internship.userservice.model.UserWrapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
@@ -10,30 +10,25 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
 
-public class JwtUtils {
-    private static final int EXPIRATION_MILLI = 100000000;
+import static com.griddynamics.internship.userservice.utils.PropertiesUtils.getProperty;
 
-    private static String secret = "secret";
+public class JwtUtils {
+    private static final int EXPIRATION
+            = Integer.parseInt(getProperty("secret.expiration"));
+    private static final String SECRET = getProperty("secret.keyword");
 
     public static String generateToken(Authentication auth) {
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) auth.getPrincipal();
+        UserWrapper userPrincipal = (UserWrapper) auth.getPrincipal();
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getEmail())
-                .setExpiration(new Date(new Date().getTime() + EXPIRATION_MILLI))
-                .signWith(SignatureAlgorithm.HS256, generateSecretKey(secret))
+                .setExpiration(new Date(new Date().getTime() + EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, generateSecretKey())
                 .compact();
     }
 
-    public static String getEmail(String token) {
-        return Jwts.parser()
-                .setSigningKey(generateSecretKey(secret))
-                .parseClaimsJwt(token)
-                .getBody().getSubject();
-    }
-
-    public static SecretKey generateSecretKey(String secretWord) {
-        byte[] decodedKey = Base64.getDecoder().decode(secretWord);
+    public static SecretKey generateSecretKey() {
+        byte[] decodedKey = Base64.getDecoder().decode(SECRET);
         return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
     }
 }
