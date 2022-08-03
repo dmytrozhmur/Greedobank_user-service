@@ -19,7 +19,6 @@ import javax.validation.Valid;
 import java.util.*;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
-import static java.util.stream.Collectors.groupingBy;
 
 @Controller
 public class RegistrationController {
