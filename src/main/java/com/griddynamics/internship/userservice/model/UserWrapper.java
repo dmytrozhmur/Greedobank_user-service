@@ -32,7 +32,7 @@ public class UserWrapper implements UserDetails {
 
     @Override
     public String getUsername() {
-        return (user.getFirstName() + user.getLastName()).toLowerCase();
+        return (user.getFirstName() + user.getLastName() + user.getId()).toLowerCase();
     }
 
     @Override

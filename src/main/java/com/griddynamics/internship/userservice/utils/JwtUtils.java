@@ -27,6 +27,13 @@ public class JwtUtils {
                 .compact();
     }
 
+    public static String getEmailBy(String token) {
+        return Jwts.parser()
+                .setSigningKey(generateSecretKey())
+                .parseClaimsJws(token)
+                .getBody().getSubject();
+    }
+
     public static SecretKey generateSecretKey() {
         byte[] decodedKey = Base64.getDecoder().decode(SECRET);
         return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
