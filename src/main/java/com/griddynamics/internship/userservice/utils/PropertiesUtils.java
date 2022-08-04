@@ -11,7 +11,7 @@ import java.util.Properties;
 public class PropertiesUtils {
     private static final String FILE_NAME = "application.properties";
     private static Properties properties = new Properties();
-    private static Logger logger = LoggerFactory.getLogger(PropertiesUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(PropertiesUtils.class.getName());
 
     static {
         URL url = PropertiesUtils.class.getClassLoader().getResource(FILE_NAME);
