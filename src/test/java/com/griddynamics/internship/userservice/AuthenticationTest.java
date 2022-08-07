@@ -2,7 +2,6 @@ package com.griddynamics.internship.userservice;
 
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
-import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class AuthenticationTest {
         assertThat(user.get("username")).isEqualTo("dmytrozhmur1");
         assertThat(user.get("type")).isEqualTo("Bearer");
         assertThat(user.get("email")).isEqualTo(TEST_EMAIL);
-        assertThat(JwtUtils.getEmailBy(user.get("token").toString())).isEqualTo(TEST_EMAIL);
+        assertThat(JwtUtils.getEmail(user.get("token").toString())).isEqualTo(TEST_EMAIL);
         assertThat(user.get("roles")).isEqualTo(new ArrayList<>());
     }
 }

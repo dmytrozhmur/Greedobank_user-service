@@ -12,9 +12,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RegistrationControllerTest {

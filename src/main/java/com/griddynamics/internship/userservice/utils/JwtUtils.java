@@ -15,7 +15,8 @@ import static com.griddynamics.internship.userservice.utils.PropertiesUtils.getP
 public class JwtUtils {
     private static final int EXPIRATION
             = Integer.parseInt(getProperty("secret.expiration"));
-    private static final String SECRET = getProperty("secret.keyword");
+    private static final SecretKey SECRET
+            = generateSecretKey(getProperty("secret.keyword"));
 
     public static String generateToken(Authentication auth) {
         UserWrapper userPrincipal = (UserWrapper) auth.getPrincipal();
@@ -23,19 +24,19 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(userPrincipal.getEmail())
                 .setExpiration(new Date(new Date().getTime() + EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, generateSecretKey())
+                .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
     }
 
-    public static String getEmailBy(String token) {
+    public static String getEmail(String token) {
         return Jwts.parser()
-                .setSigningKey(generateSecretKey())
+                .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody().getSubject();
     }
 
-    public static SecretKey generateSecretKey() {
-        byte[] decodedKey = Base64.getDecoder().decode(SECRET);
+    public static SecretKey generateSecretKey(String keyword) {
+        byte[] decodedKey = Base64.getDecoder().decode(keyword);
         return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
     }
 }
