@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Getter
@@ -13,7 +16,8 @@ import java.util.Objects;
 public class UserDTO {
     @NotNull
     private int id;
-    @NotBlank @Size(min = 1, max = 45)
+    @NotBlank
+    @Size(min = 1, max = 45)
     private String firstName;
     @NotBlank @Size(min = 1, max = 45)
     private String lastName;
@@ -32,7 +36,9 @@ public class UserDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDTO userDTO = (UserDTO) o;
-        return Objects.equals(firstName, userDTO.firstName) && Objects.equals(lastName, userDTO.lastName) && Objects.equals(email, userDTO.email);
+        return Objects.equals(firstName, userDTO.firstName)
+                && Objects.equals(lastName, userDTO.lastName)
+                && Objects.equals(email, userDTO.email);
     }
 
     @Override

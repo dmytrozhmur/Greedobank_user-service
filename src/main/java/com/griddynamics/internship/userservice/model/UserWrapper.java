@@ -1,15 +1,14 @@
 package com.griddynamics.internship.userservice.model;
 
-import com.griddynamics.internship.userservice.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserWrapper implements UserDetails {
     private User user;
 
-    public UserDetailsImpl(User user) {
+    public UserWrapper(User user) {
         this.user = user;
     }
 
@@ -33,7 +32,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return (user.getFirstName() + user.getLastName()).toLowerCase();
+        return (user.getFirstName() + user.getLastName() + user.getId()).toLowerCase();
     }
 
     @Override

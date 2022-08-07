@@ -2,7 +2,9 @@ package com.griddynamics.internship.userservice.communication.request;
 
 import lombok.*;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 

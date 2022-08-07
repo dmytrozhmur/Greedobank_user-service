@@ -6,7 +6,7 @@ import com.griddynamics.internship.userservice.communication.request.SignupReque
 import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
-import com.griddynamics.internship.userservice.model.UserDetailsImpl;
+import com.griddynamics.internship.userservice.model.UserWrapper;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(auth);
         String token = JwtUtils.generateToken(auth);
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        UserWrapper userDetails = (UserWrapper) auth.getPrincipal();
 
         return new JwtUser(
                 token, userDetails.getId(), userDetails.getEmail(), userDetails.getUsername()

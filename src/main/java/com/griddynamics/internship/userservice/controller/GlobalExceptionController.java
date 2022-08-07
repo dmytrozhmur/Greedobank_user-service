@@ -9,7 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 import static java.util.stream.Collectors.groupingBy;
@@ -33,19 +35,9 @@ public class GlobalExceptionController {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<JsonResponse<String>> bodyMissedError(HttpMessageNotReadableException exception) {
+    public ResponseEntity<JsonResponse<String>> bodyMissedError() {
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(new JsonResponse<>(INVALID_BODY));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<JsonResponse<String>> unknownError(Exception exception) {
-        return ResponseEntity
-                .internalServerError()
-                .body(new JsonResponse<>(UNEXPECTED, Collections.singletonMap(
-                        exception.getClass().getSimpleName().toLowerCase(),
-                        exception.getMessage().split(";")
-                )));
     }
 }

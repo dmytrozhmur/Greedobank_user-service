@@ -2,12 +2,15 @@ package com.griddynamics.internship.userservice.model;
 
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import java.util.Objects;
 
