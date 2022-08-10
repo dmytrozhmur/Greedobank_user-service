@@ -14,6 +14,5 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 @RequiredArgsConstructor
 public class JsonResponse<T> {
     @NonNull private T content;
-
     @JsonInclude(Include.NON_NULL) private Map<String, String[]> errors;
 }

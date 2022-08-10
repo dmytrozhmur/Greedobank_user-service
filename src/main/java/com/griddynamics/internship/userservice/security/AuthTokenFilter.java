@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice.security;
 
-import com.griddynamics.internship.userservice.exception.AuthenticationException;
-import com.griddynamics.internship.userservice.model.UserDetailsImpl;
+import com.griddynamics.internship.userservice.exception.SignInException;
+import com.griddynamics.internship.userservice.model.UserWrapper;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,16 +28,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             try {
                 String email = JwtUtils.getEmail(token);
 
-                UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(email);
+                UserWrapper userDetails = (UserWrapper) userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null
+                        userDetails, null, userDetails.getAuthorities()
                 );
                 authenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } catch (Exception e) {
-                throw new AuthenticationException("Cannot set user authentication");
+                throw new SignInException("Cannot set user authentication");
             }
         }
 

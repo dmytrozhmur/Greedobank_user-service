@@ -2,7 +2,7 @@ package com.griddynamics.internship.userservice.controller.auth;
 
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
-import com.griddynamics.internship.userservice.exception.AuthenticationException;
+import com.griddynamics.internship.userservice.exception.SignInException;
 import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,12 +41,12 @@ public class AuthenticationController {
     })
     public ResponseEntity<JsonResponse<JwtUser>> authenticateUser(
             @RequestBody @Valid SigninRequest signinRequest) {
-        JwtUser jwtUser = userService.getJwtResponse(signinRequest);
+        JwtUser jwtUser = userService.verifyUser(signinRequest);
         return ResponseEntity.ok(new JsonResponse<>(jwtUser));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<JsonResponse<String>> authenticatingError(AuthenticationException exception) {
+    @ExceptionHandler(SignInException.class)
+    public ResponseEntity<JsonResponse<String>> authenticatingError(SignInException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResponse<>(exception.getMessage()));

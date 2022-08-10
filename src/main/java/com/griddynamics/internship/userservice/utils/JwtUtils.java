@@ -22,7 +22,7 @@ public class JwtUtils {
         UserWrapper userPrincipal = (UserWrapper) auth.getPrincipal();
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(userPrincipal.getUsername())
                 .setExpiration(new Date(new Date().getTime() + EXPIRATION))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();

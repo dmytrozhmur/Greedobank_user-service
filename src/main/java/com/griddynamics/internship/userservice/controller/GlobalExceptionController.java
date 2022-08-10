@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
+import com.griddynamics.internship.userservice.exception.NonAvailableDataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -39,5 +40,12 @@ public class GlobalExceptionController {
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(new JsonResponse<>(INVALID_BODY));
+    }
+
+    @ExceptionHandler(NonAvailableDataException.class)
+    public ResponseEntity<JsonResponse<String>> lackingDataError(NonAvailableDataException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new JsonResponse<>(exception.getMessage()));
     }
 }

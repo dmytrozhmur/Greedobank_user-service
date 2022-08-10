@@ -1,8 +1,11 @@
 package com.griddynamics.internship.userservice;
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.model.Role;
+import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
+import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -30,16 +33,28 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     public void getAllUsers() {
         Collection<UserDTO> expected = getExpected();
 
         List<User> mockedUsers = new ArrayList<>(Arrays.asList(
-                new User(new SignupRequest(
-                        "Dmytro", "Zhmur", "dzhmur@griddynamics.com"), "password"),
-                new User(new SignupRequest(
-                        "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com"), "password")
+                new User(
+                        "Dmytro",
+                        "Zhmur",
+                           "dzhmur@griddynamics.com",
+                        "password",
+                                 roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
+                ),
+                new User(
+                        "Yevheniia",
+                        "Komiahina",
+                           "ykomiahina@griddynamics.com",
+                        "password",
+                                roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
+                )
         ));
         when(userRepository.findAll()).thenReturn(mockedUsers);
 
@@ -51,8 +66,8 @@ public class UserServiceTest {
 
     private Collection<UserDTO> getExpected() {
         return new ArrayList<>(Arrays.asList(
-                new UserDTO(135, "Dmytro", "Zhmur", "dzhmur@griddynamics.com"),
-                new UserDTO(87, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com")
+                new UserDTO(135, "Dmytro", "Zhmur", "dzhmur@griddynamics.com", roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)),
+                new UserDTO(87, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", roleRepository.findByTitle(RoleTitle.ROLE_ADMIN))
         ));
     }
 }

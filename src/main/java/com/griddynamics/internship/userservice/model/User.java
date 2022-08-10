@@ -2,21 +2,34 @@ package com.griddynamics.internship.userservice.model;
 
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.repo.RoleRepository;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Entity
 @Table(name = "user")
+@RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(generator = "sequence-generator")
@@ -30,19 +43,13 @@ public class User {
             }
     )
     @Column(name = "id") private int id;
-    @Column(name = "firstname") private String firstName;
-    @Column(name = "lastname") private String lastName;
-    @Column(name = "email") private String email;
-    @Column(name = "password") private String password;
+    @Column(name = "firstname") @NonNull private String firstName;
+    @Column(name = "lastname") @NonNull private String lastName;
+    @Column(name = "email") @NonNull private String email;
+    @Column(name = "password") @NonNull private String password;
+    @ManyToOne @JoinColumn(name = "role_id") @NonNull private Role role;
 
     protected User() {}
-
-    public User(SignupRequest signup, String password) {
-        this.firstName = signup.getFirstName();
-        this.lastName = signup.getLastName();
-        this.email = signup.getEmail();
-        this.password = password;
-    }
 
     @Override
     public boolean equals(Object o) {

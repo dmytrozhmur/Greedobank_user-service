@@ -13,5 +13,5 @@ public class JwtUser {
     @NonNull private Long id;
     @NonNull private String email;
     @NonNull private String username;
-    private Set<Role> roles = new HashSet<>();
+    @NonNull private String role;
 }

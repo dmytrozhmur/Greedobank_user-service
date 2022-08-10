@@ -1,30 +1,31 @@
 package com.griddynamics.internship.userservice;
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import com.griddynamics.internship.userservice.model.User;
+import com.griddynamics.internship.userservice.model.Role;
+import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
+import static com.griddynamics.internship.userservice.utils.AuthenticationUtils.URL_FORMAT;
+import static com.griddynamics.internship.userservice.utils.AuthenticationUtils.signinUser;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RegistrationControllerTest {
-    private static final String TEST_FIRST_NAME = "Dmytro";
-    public static final String TEST_LAST_NAME = "Zhmur";
-    private static final String TEST_EMAIL = "dmytro.zhmur@nure.ua";
+    private static final String USED_EMAIL = "dzhmur@griddynamics.com";
+    private static final String USED_PASSWORD = "password1";
     private static final String TEST_PASSWORD = "password";
-    public static final String USED_EMAIL = "dzhmur@griddynamics.com";
-    private static final User EXISTING_ENTITY = new User(
-            new SignupRequest(TEST_FIRST_NAME, TEST_LAST_NAME, USED_EMAIL), TEST_PASSWORD);
+    private static final String TARGET = "signup";
+    public static final int DEFAULT_USER_COUNT = 10;
 
     @LocalServerPort
     private int port;
@@ -32,53 +33,88 @@ public class RegistrationControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @MockBean
+    @Autowired
     private UserRepository userRepository;
 
     @Test
     public void signupSuccess() {
-        when(userRepository.findByEmail(USED_EMAIL)).thenReturn(EXISTING_ENTITY);
+        String token =
+                signinUser(this.restTemplate, USED_EMAIL, USED_PASSWORD, this.port)
+                        .get("token")
+                        .toString();
+        String targetUrl = String.format(URL_FORMAT, port, TARGET);
 
-        String actual = getActualResponse(new SignupRequest(
-                TEST_FIRST_NAME, TEST_LAST_NAME, TEST_EMAIL, TEST_PASSWORD
-        ));
+        String actual = getActual(
+                token,
+                targetUrl,
+                new SignupRequest(
+                        "Pavlo",
+                        "Zibrov",
+                        String.format(
+                                "pzibrov%d@griddynamics.com",
+                                userRepository.findAll().size() - DEFAULT_USER_COUNT),
+                        TEST_PASSWORD
+                )
+        );
 
         assertThat(actual).contains(SUCCESS);
-        verify(userRepository, times(0)).findByEmail(USED_EMAIL);
-        verify(userRepository).findByEmail(TEST_EMAIL);
     }
 
     @Test
     public void signupInvalidField() {
-        when(userRepository.findByEmail(USED_EMAIL)).thenReturn(EXISTING_ENTITY);
+        String token =
+                signinUser(this.restTemplate, USED_EMAIL, USED_PASSWORD, this.port)
+                        .get("token")
+                        .toString();
+        String targetUrl = String.format(URL_FORMAT, port, TARGET);
 
-        String actual = getActualResponse(new SignupRequest(
-                "", "Zibrov",
-                "svjndsglvnlngjbkmgfblkghbfkdjnfdvjlmrlmtbkrtb@gmail.u", "pass"
+        String actual = getActual(
+                token,
+                targetUrl,
+                new SignupRequest(
+                        "",
+                        "Zibrov",
+                        "svjndsglvnlngjbkmgfblkghbfkdjnfdvjlmrlmtbkrtb@gmail.u",
+                        "pass",
+                        new Role(2, RoleTitle.ROLE_USER)
         ));
 
         assertThat(actual).contains(EMPTY_FIELD, EXCEEDED_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
-        verify(userRepository, times(0)).findByEmail(USED_EMAIL);
-        verify(userRepository, times(0)).findByEmail(TEST_EMAIL);
     }
 
     @Test
     public void signupExistingEmail() {
-        when(userRepository.findByEmail(USED_EMAIL)).thenReturn(EXISTING_ENTITY);
+        String token =
+                signinUser(this.restTemplate, USED_EMAIL, USED_PASSWORD, this.port)
+                        .get("token")
+                        .toString();
+        String targetUrl = String.format(URL_FORMAT, port, TARGET);
 
-        String actual = getActualResponse(new SignupRequest(
-                TEST_FIRST_NAME, TEST_LAST_NAME, USED_EMAIL, TEST_PASSWORD
-        ));
+        String actual = getActual(token, targetUrl,
+                new SignupRequest(
+                        "Dmytro",
+                        "Zhmur",
+                        USED_EMAIL,
+                        TEST_PASSWORD,
+                        new Role(1, RoleTitle.ROLE_ADMIN)
+                )
+        );
 
         assertThat(actual).contains(EMAIL_IN_USE);
-        verify(userRepository).findByEmail(USED_EMAIL);
-        verify(userRepository, times(0)).findByEmail(TEST_EMAIL);
     }
 
-    private String getActualResponse(SignupRequest signupRequest) {
-        return this.restTemplate.postForObject(
-                        String.format("http://localhost:%d/api/v1/signup", port),
-                        signupRequest,
-                        String.class);
+    private String getActual(String token, String targetUrl, SignupRequest signup) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Object> request = new HttpEntity<>(
+                signup,
+                headers
+        );
+
+        ResponseEntity<String> response = this.restTemplate.exchange(
+                targetUrl, HttpMethod.POST, request, String.class
+        );
+        String actual = response.getBody();
+        return actual;
     }
 }

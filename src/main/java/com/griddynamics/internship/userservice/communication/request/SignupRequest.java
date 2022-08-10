@@ -1,10 +1,18 @@
 package com.griddynamics.internship.userservice.communication.request;
 
-import lombok.*;
+import com.griddynamics.internship.userservice.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import java.util.Set;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 
@@ -31,5 +39,7 @@ public class SignupRequest {
     @NonNull private String email;
 
     @Size(min = 8, max = 20, message = INVALID_PASSWORD_LENGTH)
-    private String password;
+    @NonNull private String password;
+
+    private Role role;
 }

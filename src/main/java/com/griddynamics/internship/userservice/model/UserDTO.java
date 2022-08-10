@@ -14,8 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Schema(name = "user", description = "user data")
 public class UserDTO {
-    @NotNull
-    private int id;
+    @NotNull private int id;
     @NotBlank
     @Size(min = 1, max = 45)
     private String firstName;
@@ -23,12 +22,14 @@ public class UserDTO {
     private String lastName;
     @NotBlank @Size(max = 60) @Email
     private String email;
+    @NotNull private Role role;
 
     public UserDTO(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.role = user.getRole();
     }
 
     @Override

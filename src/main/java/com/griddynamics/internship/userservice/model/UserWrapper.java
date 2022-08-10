@@ -1,10 +1,14 @@
 package com.griddynamics.internship.userservice.model;
 
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
+@EqualsAndHashCode
 public class UserWrapper implements UserDetails {
     private User user;
 
@@ -16,13 +20,10 @@ public class UserWrapper implements UserDetails {
         return user.getId();
     }
 
-    public String getEmail() {
-        return user.getEmail();
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(
+                new SimpleGrantedAuthority(user.getRole().getTitle().name()));
     }
 
     @Override
@@ -32,7 +33,7 @@ public class UserWrapper implements UserDetails {
 
     @Override
     public String getUsername() {
-        return (user.getFirstName() + user.getLastName() + user.getId()).toLowerCase();
+        return user.getEmail();
     }
 
     @Override

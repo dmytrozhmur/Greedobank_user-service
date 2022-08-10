@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,10 +37,15 @@ public class RegistrationController {
             @ApiResponse(responseCode = "400", description = "Invalid field format",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unknown sender",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "403", description = "Access denied",
+                    content = @Content(mediaType = "text/html")),
             @ApiResponse(responseCode = "409", description = "Specified used email",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<JsonResponse<String>> registerUser(
             @RequestBody @Valid SignupRequest signupRequest) {
         userService.createUser(signupRequest);

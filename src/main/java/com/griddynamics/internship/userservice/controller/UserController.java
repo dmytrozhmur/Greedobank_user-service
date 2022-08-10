@@ -1,5 +1,6 @@
 package com.griddynamics.internship.userservice.controller;
 
+import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,8 +9,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 
 @RestController
@@ -23,9 +27,15 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Get user list",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Users not found")
+            @ApiResponse(responseCode = "401", description = "Unknown sender",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "403", description = "Access denied",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "404", description = "Users not found",
+                    content = @Content(mediaType = "text/html"))
     })
-    public Iterable<UserDTO> getUserList() {
+    @PreAuthorize("hasRole('ADMIN')")
+    public Collection<UserDTO> getUserList() {
         return userService.findAll();
     }
 
