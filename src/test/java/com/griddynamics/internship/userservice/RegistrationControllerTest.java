@@ -1,8 +1,6 @@
 package com.griddynamics.internship.userservice;
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import com.griddynamics.internship.userservice.model.Role;
-import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +73,7 @@ public class RegistrationControllerTest {
                         "",
                         "Zibrov",
                         "svjndsglvnlngjbkmgfblkghbfkdjnfdvjlmrlmtbkrtb@gmail.u",
-                        "pass",
-                        new Role(2, RoleTitle.ROLE_USER)
+                        "pass"
         ));
 
         assertThat(actual).contains(EMPTY_FIELD, EXCEEDED_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
@@ -95,8 +92,7 @@ public class RegistrationControllerTest {
                         "Dmytro",
                         "Zhmur",
                         USED_EMAIL,
-                        TEST_PASSWORD,
-                        new Role(1, RoleTitle.ROLE_ADMIN)
+                        TEST_PASSWORD
                 )
         );
 
