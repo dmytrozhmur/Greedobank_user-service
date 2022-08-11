@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
@@ -52,6 +53,12 @@ public class UserService {
 
         if (users.isEmpty()) throw new NonAvailableDataException("User list is empty");
         return users;
+    }
+
+    public UserDTO findUser(int id) {
+        return new UserDTO(userRepository
+                .findById(id)
+                .orElseThrow(() -> new NonAvailableDataException("User doesn't exist")));
     }
 
     public void createUser(SignupRequest signup) {

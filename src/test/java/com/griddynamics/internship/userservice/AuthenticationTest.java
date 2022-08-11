@@ -23,8 +23,6 @@ public class AuthenticationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Test
     public void authenticate() {

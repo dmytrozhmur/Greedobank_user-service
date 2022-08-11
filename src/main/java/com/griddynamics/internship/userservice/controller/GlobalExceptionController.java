@@ -43,9 +43,9 @@ public class GlobalExceptionController {
     }
 
     @ExceptionHandler(NonAvailableDataException.class)
-    public ResponseEntity<JsonResponse<String>> lackingDataError(NonAvailableDataException exception) {
+    public ResponseEntity<String> lackingDataError(NonAvailableDataException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new JsonResponse<>(exception.getMessage()));
+                .body(exception.getMessage());
     }
 }
