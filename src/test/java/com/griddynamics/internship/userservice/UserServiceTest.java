@@ -29,31 +29,33 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
+    private final static Role TEST_ROLE = new Role(1, RoleTitle.ROLE_ADMIN);
     @MockBean
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
-    @Autowired
+    @MockBean
     private RoleRepository roleRepository;
 
     @Test
     public void getAllUsers() {
         Collection<UserDTO> expected = getExpected();
 
+        when(roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)).thenReturn(TEST_ROLE);
         List<User> mockedUsers = new ArrayList<>(Arrays.asList(
                 new User(
                         "Dmytro",
                         "Zhmur",
-                           "dzhmur@griddynamics.com",
+                        "dzhmur@griddynamics.com",
                         "password",
-                                 roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
+                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
                 ),
                 new User(
                         "Yevheniia",
                         "Komiahina",
-                           "ykomiahina@griddynamics.com",
+                        "ykomiahina@griddynamics.com",
                         "password",
-                                roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
+                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
                 )
         ));
         when(userRepository.findAll()).thenReturn(mockedUsers);
@@ -66,8 +68,8 @@ public class UserServiceTest {
 
     private Collection<UserDTO> getExpected() {
         return new ArrayList<>(Arrays.asList(
-                new UserDTO(135, "Dmytro", "Zhmur", "dzhmur@griddynamics.com", roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)),
-                new UserDTO(87, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", roleRepository.findByTitle(RoleTitle.ROLE_ADMIN))
+                new UserDTO(135, "Dmytro", "Zhmur", "dzhmur@griddynamics.com", TEST_ROLE),
+                new UserDTO(87, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", TEST_ROLE)
         ));
     }
 }

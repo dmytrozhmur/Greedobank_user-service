@@ -4,10 +4,8 @@ import com.griddynamics.internship.userservice.model.Role;
 import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.service.UserService;
-import com.griddynamics.internship.userservice.utils.IntegerParameterResolver;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -29,7 +27,6 @@ import static com.griddynamics.internship.userservice.utils.AuthenticationUtils.
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ExtendWith(IntegerParameterResolver.class)
 public class UserControllerTest {
     private static final String UNKNOWN_SENDER = "\"Full authentication is required to access this resource\"";
     private static final String ACCESS_DENIED = "\"Access is denied\"";
@@ -72,23 +69,6 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUserById(Integer id) {
-        HttpEntity<Object> request = createAuthorizedRequest(USER_EMAIL, USER_PASSWORD);
-        String targetUrl = String.format(URL_FORMAT, port, TARGET + id);
-
-        ResponseEntity<UserDTO> response = this.restTemplate.exchange(
-                targetUrl, HttpMethod.GET, request, UserDTO.class
-        );
-        UserDTO actual = response.getBody();
-
-        assertThat(actual.getId()).isEqualTo(id);
-        assertThat(actual.getFirstName()).isEqualTo("Taras");
-        assertThat(actual.getLastName()).isEqualTo("Chornyi");
-        assertThat(actual.getEmail()).isEqualTo(USER_EMAIL);
-        assertThat(actual.getRole().getTitle()).isEqualTo(RoleTitle.valueOf("ROLE_USER"));
-    }
-
-    @Test
     public void getUserListUnauthorized() {
         String targetUrl = String.format(URL_FORMAT, port, TARGET);
 
@@ -101,19 +81,6 @@ public class UserControllerTest {
     public void getUserListInaccessible() {
         HttpEntity<Object> request = createAuthorizedRequest(USER_EMAIL, USER_PASSWORD);
         String targetUrl = String.format(URL_FORMAT, port, TARGET);
-
-        ResponseEntity<String> response = this.restTemplate.exchange(
-                targetUrl, HttpMethod.GET, request, String.class
-        );
-        String actual = response.getBody();
-
-        assertThat(actual).isEqualTo(ACCESS_DENIED);
-    }
-
-    @Test
-    public void getOtherThanRequesterUser(Integer id) {
-        HttpEntity<Object> request = createAuthorizedRequest("ipadalka@griddynamics.com", "password7");
-        String targetUrl = String.format(URL_FORMAT, port, TARGET + id);
 
         ResponseEntity<String> response = this.restTemplate.exchange(
                 targetUrl, HttpMethod.GET, request, String.class

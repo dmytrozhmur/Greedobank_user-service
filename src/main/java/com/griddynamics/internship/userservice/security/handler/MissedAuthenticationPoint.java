@@ -17,6 +17,6 @@ public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), authException.getMessage());
+        mapper.writeValue(response.getOutputStream(), new JsonResponse<>(authException.getMessage()));
     }
 }

@@ -34,38 +34,20 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Get user list",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "204", description = "Users not found",
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
-                    content = @Content(mediaType = "text/html")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
-                    content = @Content(mediaType = "text/html")),
-            @ApiResponse(responseCode = "404", description = "Users not found",
-                    content = @Content(mediaType = "text/html"))
+                    content = @Content(mediaType = "application/json")),
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public Collection<UserDTO> getUserList() {
-        return userService.findAll();
-    }
+    public ResponseEntity<?> getUserList() {
+        Collection<UserDTO> userList = userService.findAll();
 
-    @GetMapping("/api/v1/users/{id}")
-    @Operation(summary = "Get user by id")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Get user",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserDTO.class))),
-            @ApiResponse(responseCode = "401", description = "Unknown sender",
-                    content = @Content(mediaType = "text/html")),
-            @ApiResponse(responseCode = "403", description = "Access denied",
-                    content = @Content(mediaType = "text/html")),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(mediaType = "text/html"))
-    })
-    @PreAuthorize("isAuthenticated()")
-    public UserDTO getUser(Authentication authentication, @PathVariable("id") int id) {
-        if (((UserWrapper) authentication.getPrincipal()).getId() != id &&
-                authentication.getAuthorities()
-                        .stream()
-                        .allMatch(a -> a.getAuthority().equals("ROLE_USER")))
-            throw new AccessDeniedException("Access is denied");
-        return userService.findUser(id);
+        if(!userList.isEmpty()) return ResponseEntity.ok(userList);
+        return ResponseEntity.
+                status(HttpStatus.NO_CONTENT)
+                .body(new JsonResponse<>("User list is empty"));
     }
 }

@@ -1,34 +1,22 @@
 package com.griddynamics.internship.userservice.model;
 
-
-import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import com.griddynamics.internship.userservice.repo.RoleRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
-@Entity
-@Table(name = "user")
+@Entity(name = "user")
 @RequiredArgsConstructor
 public class User {
     @Id

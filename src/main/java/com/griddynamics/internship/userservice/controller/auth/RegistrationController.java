@@ -38,9 +38,9 @@ public class RegistrationController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
-                    content = @Content(mediaType = "text/html")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
-                    content = @Content(mediaType = "text/html")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "409", description = "Specified used email",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class)))
