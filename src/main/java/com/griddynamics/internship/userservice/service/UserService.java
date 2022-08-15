@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 
+import static com.griddynamics.internship.userservice.model.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 
 @Service
@@ -57,7 +58,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(signup.getPassword());
         Role specifiedRole = signup.getRole();
         Role appropriateRole = specifiedRole
-                == null ? roleRepository.findByTitle(RoleTitle.ROLE_USER) : specifiedRole;
+                == null ? roleRepository.findByTitle(defaultTitle()) : specifiedRole;
 
         userRepository.save(new User(
                 signup.getFirstName(),

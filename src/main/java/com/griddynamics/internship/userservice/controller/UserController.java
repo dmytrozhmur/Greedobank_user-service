@@ -34,20 +34,14 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Get user list",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class))),
-            @ApiResponse(responseCode = "204", description = "Users not found",
-                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
                     content = @Content(mediaType = "application/json")),
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getUserList() {
+    public ResponseEntity<Collection<UserDTO>> getUserList() {
         Collection<UserDTO> userList = userService.findAll();
-
-        if(!userList.isEmpty()) return ResponseEntity.ok(userList);
-        return ResponseEntity.
-                status(HttpStatus.NO_CONTENT)
-                .body(new JsonResponse<>("User list is empty"));
+        return ResponseEntity.ok(userList);
     }
 }
