@@ -13,17 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.*;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 
-@Controller
+@RestController
 public class RegistrationController {
     @Autowired
     private UserService userService;
@@ -38,9 +38,9 @@ public class RegistrationController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
-                    content = @Content(mediaType = "text/html")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
-                    content = @Content(mediaType = "text/html")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "409", description = "Specified used email",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class)))

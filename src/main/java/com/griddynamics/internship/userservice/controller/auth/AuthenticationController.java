@@ -14,14 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 public class AuthenticationController {
     @Autowired
     private UserService userService;
@@ -46,7 +46,7 @@ public class AuthenticationController {
     }
 
     @ExceptionHandler(SignInException.class)
-    public ResponseEntity<JsonResponse<String>> authenticatingError(SignInException exception) {
+    public ResponseEntity<JsonResponse<String>> authError(SignInException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResponse<>(exception.getMessage()));

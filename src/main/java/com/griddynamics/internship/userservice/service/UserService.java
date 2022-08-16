@@ -3,10 +3,9 @@ package com.griddynamics.internship.userservice.service;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import com.griddynamics.internship.userservice.exception.NonAvailableDataException;
+import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.model.Role;
-import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.model.UserWrapper;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.griddynamics.internship.userservice.model.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 
 @Service
@@ -46,19 +46,16 @@ public class UserService {
     }
 
     public Collection<UserDTO> findAll() {
-        List<UserDTO> users = userRepository.findAll()
+        return userRepository.findAll()
                 .stream()
                 .map(UserDTO::new)
                 .toList();
-
-        if (users.isEmpty()) throw new NonAvailableDataException("User list is empty");
-        return users;
     }
 
     public UserDTO findUser(int id) {
         return new UserDTO(userRepository
                 .findById(id)
-                .orElseThrow(() -> new NonAvailableDataException("User doesn't exist")));
+                .orElseThrow(() -> new NonExistentDataException("User doesn't exist")));
     }
 
     public void createUser(SignupRequest signup) {
@@ -68,7 +65,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(signup.getPassword());
         Role specifiedRole = signup.getRole();
         Role appropriateRole = specifiedRole
-                == null ? roleRepository.findByTitle(RoleTitle.ROLE_USER) : specifiedRole;
+                == null ? roleRepository.findByTitle(defaultTitle()) : specifiedRole;
 
         userRepository.save(new User(
                 signup.getFirstName(),

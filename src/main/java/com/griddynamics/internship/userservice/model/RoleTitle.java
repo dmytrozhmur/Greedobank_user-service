@@ -2,5 +2,9 @@ package com.griddynamics.internship.userservice.model;
 
 public enum RoleTitle {
     ROLE_ADMIN,
-    ROLE_USER
+    ROLE_USER;
+
+    public static RoleTitle defaultTitle() {
+        return ROLE_USER;
+    }
 }
