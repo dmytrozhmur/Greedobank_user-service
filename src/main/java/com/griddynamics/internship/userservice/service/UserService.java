@@ -6,7 +6,6 @@ import com.griddynamics.internship.userservice.communication.request.SignupReque
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.JwtUser;
 import com.griddynamics.internship.userservice.model.Role;
-import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.model.UserWrapper;
@@ -24,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.griddynamics.internship.userservice.model.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
@@ -49,6 +50,12 @@ public class UserService {
                 .stream()
                 .map(UserDTO::new)
                 .toList();
+    }
+
+    public UserDTO findUser(int id) {
+        return new UserDTO(userRepository
+                .findById(id)
+                .orElseThrow(() -> new NonExistentDataException("User doesn't exist")));
     }
 
     public void createUser(SignupRequest signup) {

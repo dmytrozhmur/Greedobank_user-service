@@ -51,6 +51,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return 43 * (email == null ? 0 : email.length());
+        return 43 * email.length();
     }
 }
