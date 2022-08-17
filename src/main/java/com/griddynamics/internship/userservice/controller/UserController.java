@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @RestController
@@ -37,7 +38,8 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Collection<UserDTO>> getUserList() {
-        return ResponseEntity.ok(userService.findAll());
+        Collection<UserDTO> users = userService.findAll();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/api/v1/users/{id}")
@@ -56,6 +58,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
     public ResponseEntity<UserDTO> getUser(@AuthenticationPrincipal UserWrapper authUser,
                                            @PathVariable("id") int id) {
-        return ResponseEntity.ok(userService.findUser(id));
+        UserDTO user = userService.findUser(id);
+        return ResponseEntity.ok(user);
     }
 }
