@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice;
 
 import com.griddynamics.internship.userservice.communication.request.SignupRequest;
-import com.griddynamics.internship.userservice.repo.UserRepository;
+import com.griddynamics.internship.userservice.datasource.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

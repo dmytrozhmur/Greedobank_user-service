@@ -1,12 +1,11 @@
 package com.griddynamics.internship.userservice;
 
-import com.griddynamics.internship.userservice.communication.request.SignupRequest;
 import com.griddynamics.internship.userservice.model.Role;
 import com.griddynamics.internship.userservice.model.RoleTitle;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
-import com.griddynamics.internship.userservice.repo.RoleRepository;
-import com.griddynamics.internship.userservice.repo.UserRepository;
+import com.griddynamics.internship.userservice.datasource.repo.RoleRepository;
+import com.griddynamics.internship.userservice.datasource.repo.UserRepository;
 import com.griddynamics.internship.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -9,8 +9,8 @@ import com.griddynamics.internship.userservice.model.Role;
 import com.griddynamics.internship.userservice.model.User;
 import com.griddynamics.internship.userservice.model.UserDTO;
 import com.griddynamics.internship.userservice.model.UserWrapper;
-import com.griddynamics.internship.userservice.repo.RoleRepository;
-import com.griddynamics.internship.userservice.repo.UserRepository;
+import com.griddynamics.internship.userservice.datasource.repo.RoleRepository;
+import com.griddynamics.internship.userservice.datasource.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,9 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.griddynamics.internship.userservice.model.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;

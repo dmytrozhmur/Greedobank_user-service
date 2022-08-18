@@ -1,6 +1,5 @@
 package com.griddynamics.internship.userservice;
 
-import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
