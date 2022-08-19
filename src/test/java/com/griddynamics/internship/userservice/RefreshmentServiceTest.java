@@ -34,6 +34,7 @@ public class RefreshmentServiceTest {
     private static final String TEST_LASTNAME = "Zhmur";
     private static final String TEST_PASSWORD = "password";
     private static final String TEST_REFRESH_TOKEN = "abcdef-ghijkl-mnopqr-stuvw-xyz";
+    public static final String TOKEN_TYPE = "Bearer";
     @MockBean
     private RefreshmentRepository refreshmentRepository;
     @MockBean
@@ -67,8 +68,8 @@ public class RefreshmentServiceTest {
         JwtRefreshment refreshmentDto = service.updateAccessToken(TEST_REFRESH_TOKEN);
 
         assertNotNull(refreshmentDto.getAccessToken());
-        assertEquals(refreshmentDto.getRefreshToken(), TEST_REFRESH_TOKEN);
-        assertEquals(refreshmentDto.getTokenType(), "Bearer");
+        assertEquals(TEST_REFRESH_TOKEN, refreshmentDto.getRefreshToken());
+        assertEquals(TOKEN_TYPE, refreshmentDto.getTokenType());
     }
 
     private Optional<Refreshment> createTestToken() {
