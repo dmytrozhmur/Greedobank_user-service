@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice.utils;
 
-import com.griddynamics.internship.userservice.model.UserWrapper;
+import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
@@ -14,15 +14,13 @@ import static com.griddynamics.internship.userservice.utils.PropertiesUtils.getP
 
 public class JwtUtils {
     private static final int EXPIRATION
-            = Integer.parseInt(getProperty("secret.expiration"));
+            = Integer.parseInt(getProperty("token.expiration"));
     private static final SecretKey SECRET
-            = generateSecretKey(getProperty("secret.keyword"));
+            = generateSecretKey(getProperty("token.keyword"));
 
-    public static String generateToken(Authentication auth) {
-        UserWrapper userPrincipal = (UserWrapper) auth.getPrincipal();
-
+    public static String generateToken(UserWrapper user) {
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(user.getUsername())
                 .setExpiration(new Date(new Date().getTime() + EXPIRATION))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();

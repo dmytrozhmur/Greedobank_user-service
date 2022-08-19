@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice.communication.request;
 
-import com.griddynamics.internship.userservice.model.Role;
+import com.griddynamics.internship.userservice.model.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import java.util.Set;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 

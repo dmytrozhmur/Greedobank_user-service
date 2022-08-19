@@ -1,10 +1,14 @@
 package com.griddynamics.internship.userservice.security;
 
-import com.griddynamics.internship.userservice.model.UserWrapper;
+import com.griddynamics.internship.userservice.exception.NonExistentDataException;
+import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import org.flywaydb.core.api.ErrorDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger =
@@ -30,6 +35,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
+
         if(token != null) {
             try {
                 String email = JwtUtils.getEmail(token);
@@ -42,6 +48,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } catch (ExpiredJwtException e) {
+                request.setAttribute("expired", e.getMessage());
             } catch (UsernameNotFoundException | IllegalArgumentException e) {
                 logger.error(e.getMessage(), e);
             }
