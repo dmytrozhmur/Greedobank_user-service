@@ -51,7 +51,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/api/v1/refreshToken")
-    @Operation(summary = "Get new token")
+    @Operation(summary = "Get new access token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Access token sent",
                     content = @Content(mediaType = "application/json",
@@ -70,7 +70,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new JsonResponse<>(refreshment));
     }
 
-    @ExceptionHandler({BadCredentialsException.class, ExpiredJwtException.class})
+    @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<JsonResponse<String>> invalidCredentialsError(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)

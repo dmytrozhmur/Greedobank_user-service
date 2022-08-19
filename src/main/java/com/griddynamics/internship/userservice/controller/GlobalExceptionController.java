@@ -49,11 +49,4 @@ public class GlobalExceptionController {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new JsonResponse<>(exception.getMessage()));
     }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<JsonResponse<String>> tokenExpiredError(ExpiredJwtException exception) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new JsonResponse<>(exception.getMessage()));
-    }
 }
