@@ -17,11 +17,8 @@ import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(
-//        classes = UserJpaConfiguration.class,
-//        loader = AnnotationConfigContextLoader.class
-//) @Transactional
+@RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 public class InMemoryDBTest {
     @Resource
     private UserRepository userRepository;
