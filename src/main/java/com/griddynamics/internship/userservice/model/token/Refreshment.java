@@ -25,15 +25,6 @@ public class Refreshment {
 
     protected Refreshment() {}
 
-    public Refreshment(String token) {
-        this(token, Instant.MAX);
-    }
-
-    public Refreshment(String token, Instant expiration) {
-        this.token = token;
-        this.expiration = expiration;
-    }
-
     public Refreshment(String token, User user) {
         this(token, Instant.MAX, user);
     }

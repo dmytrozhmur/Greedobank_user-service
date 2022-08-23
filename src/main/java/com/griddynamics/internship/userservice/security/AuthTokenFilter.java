@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
+import static com.griddynamics.internship.userservice.security.handler.MissedAuthenticationPoint.HEADER_EXPIRED;
+
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger =
             LoggerFactory.getLogger(AuthTokenFilter.class.getName());
@@ -49,7 +51,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } catch (ExpiredJwtException e) {
-                request.setAttribute("expired", e.getMessage());
+                request.setAttribute(HEADER_EXPIRED, e.getMessage());
             } catch (UsernameNotFoundException | IllegalArgumentException e) {
                 logger.error(e.getMessage(), e);
             }

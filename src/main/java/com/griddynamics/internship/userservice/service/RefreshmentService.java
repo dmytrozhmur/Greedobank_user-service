@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.griddynamics.internship.userservice.exception.InactiveRefreshmentException;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.token.JwtRefreshment;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
@@ -8,8 +9,10 @@ import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RefreshmentRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -40,16 +43,17 @@ public class RefreshmentService {
 
     public JwtRefreshment updateAccessToken(String refreshToken) {
         return refreshmentRepository.findByToken(refreshToken)
-                .filter(RefreshmentService::verifyExpiration)
+                .map(RefreshmentService::verifyExpiration)
                 .map(Refreshment::getUser)
                 .map(UserWrapper::new)
                 .map(JwtUtils::generateToken)
                 .map(accessToken -> new JwtRefreshment(accessToken, refreshToken))
-                .orElseThrow(() -> new NonExistentDataException("Refreshment token isn't active. " +
-                        "Please, provide authentication again."));
+                .orElseThrow(() -> new NonExistentDataException("Refreshment token hasn't been found"));
     }
 
-    private static boolean verifyExpiration(Refreshment refreshment) {
-        return refreshment.getExpiration().isAfter(Instant.now());
+    private static Refreshment verifyExpiration(Refreshment refreshment) {
+        if(refreshment.getExpiration().isAfter(Instant.now())) return refreshment;
+        throw new InactiveRefreshmentException(
+                    "Refreshment token isn't active. Please, provide authentication again.");
     }
 }

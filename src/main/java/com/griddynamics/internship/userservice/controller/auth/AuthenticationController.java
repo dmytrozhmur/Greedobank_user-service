@@ -71,7 +71,7 @@ public class AuthenticationController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<JsonResponse<String>> invalidCredentialsError(RuntimeException exception) {
+    public ResponseEntity<JsonResponse<String>> invalidCredentialsError(BadCredentialsException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResponse<>(exception.getMessage()));

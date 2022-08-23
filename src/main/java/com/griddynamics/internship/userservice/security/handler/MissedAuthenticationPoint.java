@@ -3,7 +3,6 @@ package com.griddynamics.internship.userservice.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -13,15 +12,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.Locale;
 
 @Component
 public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
-    public static final String HEADER = "expired";
+    public static final String HEADER_EXPIRED = "expired";
     @Autowired
     private ObjectMapper mapper;
 
@@ -33,12 +28,12 @@ public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
         ServletOutputStream responseStream = response.getOutputStream();
         String responseMessage = authException.getMessage();
 
-        if(request.getAttribute("expired") != null) {
+        if(request.getAttribute(HEADER_EXPIRED) != null) {
             missedAuthResponse = new JsonResponse<>(
                     responseMessage,
                     Collections.singletonMap(
-                            HEADER,
-                            String.valueOf(request.getAttribute(HEADER)).split("\\.\s*")
+                            HEADER_EXPIRED,
+                            String.valueOf(request.getAttribute(HEADER_EXPIRED)).split("\\.\s*")
                     )
             );
         } else {
