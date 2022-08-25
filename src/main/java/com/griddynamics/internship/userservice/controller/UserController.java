@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -38,8 +39,8 @@ public class UserController {
                     content = @Content(mediaType = "application/json")),
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present")
-    public ResponseEntity<Collection<UserDTO>> getUserList(@RequestParam Optional<String> email) {
-        Collection<UserDTO> users = email.isPresent()
+    public ResponseEntity<List<UserDTO>> getUserList(@RequestParam Optional<String> email) {
+        List<UserDTO> users = email.isPresent()
                 ? userService.findAll(email.get()) : userService.findAll();
         return ResponseEntity.ok(users);
     }

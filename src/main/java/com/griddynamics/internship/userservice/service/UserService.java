@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
@@ -47,14 +48,14 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public Collection<UserDTO> findAll() {
+    public List<UserDTO> findAll() {
         return userRepository.findAll()
                 .stream()
                 .map(UserDTO::new)
                 .toList();
     }
 
-    public Collection<UserDTO> findAll(String email) {
+    public List<UserDTO> findAll(String email) {
         User user = userRepository.findByEmail(email);
         if(user == null) throw new NonExistentDataException(USER_NOT_FOUND);
 
