@@ -23,9 +23,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 
 @Service
 public class UserService {
@@ -52,10 +54,21 @@ public class UserService {
                 .toList();
     }
 
+    public Collection<UserDTO> findAll(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user == null) throw new NonExistentDataException(USER_NOT_FOUND);
+
+        return Collections.singletonList(new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        ));
+    }
+
     public UserDTO findUser(int id) {
         return new UserDTO(userRepository
                 .findById(id)
-                .orElseThrow(() -> new NonExistentDataException("User doesn't exist")));
+                .orElseThrow(() -> new NonExistentDataException(USER_NOT_FOUND)));
     }
 
     public void createUser(SignupRequest signup) {

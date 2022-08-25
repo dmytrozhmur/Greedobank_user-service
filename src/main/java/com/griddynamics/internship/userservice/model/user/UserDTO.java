@@ -4,6 +4,8 @@ import com.griddynamics.internship.userservice.model.role.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,17 +15,14 @@ import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Schema(name = "user", description = "user data")
 public class UserDTO {
-    @NotNull private int id;
-    @NotBlank
-    @Size(min = 1, max = 45)
-    private String firstName;
-    @NotBlank @Size(min = 1, max = 45)
-    private String lastName;
-    @NotBlank @Size(max = 60) @Email
-    private String email;
-    @NotNull private Role role;
+    @NonNull private int id;
+    @Size(min = 1, max = 45) private String firstName;
+    @Size(min = 1, max = 45) private String lastName;
+    @Size(max = 60) @Email @NonNull private String email;
+    @NonNull private Role role;
 
     public UserDTO(User user) {
         this.id = user.getId();

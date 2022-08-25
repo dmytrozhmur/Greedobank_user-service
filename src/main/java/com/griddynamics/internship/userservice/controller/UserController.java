@@ -14,9 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.Optional;
 
 
 @RestController
@@ -35,9 +37,10 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Access denied",
                     content = @Content(mediaType = "application/json")),
     })
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Collection<UserDTO>> getUserList() {
-        Collection<UserDTO> users = userService.findAll();
+    @PreAuthorize("hasRole('ADMIN') or #email.present")
+    public ResponseEntity<Collection<UserDTO>> getUserList(@RequestParam Optional<String> email) {
+        Collection<UserDTO> users = email.isPresent()
+                ? userService.findAll(email.get()) : userService.findAll();
         return ResponseEntity.ok(users);
     }
 
@@ -55,8 +58,8 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
-    public ResponseEntity<UserDTO> getUser(@AuthenticationPrincipal UserWrapper authUser,
-                                           @PathVariable("id") int id) {
+    public ResponseEntity<UserDTO> getAccountInfo(@AuthenticationPrincipal UserWrapper authUser,
+                                                  @PathVariable("id") int id) {
         UserDTO user = userService.findUser(id);
         return ResponseEntity.ok(user);
     }
