@@ -16,7 +16,6 @@ import java.util.Collections;
 
 @Component
 public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
-    public static final String HEADER_EXPIRED = "expired";
     @Autowired
     private ObjectMapper mapper;
 
@@ -24,21 +23,8 @@ public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        JsonResponse<String> missedAuthResponse;
+        JsonResponse<String> missedAuthResponse = new JsonResponse<>(authException.getMessage());
         ServletOutputStream responseStream = response.getOutputStream();
-        String responseMessage = authException.getMessage();
-
-        if(request.getAttribute(HEADER_EXPIRED) != null) {
-            missedAuthResponse = new JsonResponse<>(
-                    responseMessage,
-                    Collections.singletonMap(
-                            HEADER_EXPIRED,
-                            String.valueOf(request.getAttribute(HEADER_EXPIRED)).split("\\.\s*")
-                    )
-            );
-        } else {
-            missedAuthResponse = new JsonResponse<>(responseMessage);
-        }
 
         mapper.writeValue(responseStream, missedAuthResponse);
     }
