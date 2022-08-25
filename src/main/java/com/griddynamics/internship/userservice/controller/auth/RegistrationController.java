@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice.controller.auth;
 
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
-import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,8 +47,8 @@ public class RegistrationController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<JsonResponse<String>> registerUser(
-            @RequestBody @Valid SignupRequest signupRequest) {
-        userService.createUser(signupRequest);
+            @RequestBody @Valid UserDataRequest userDataRequest) {
+        userService.createUser(userDataRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new JsonResponse<>(SUCCESS));

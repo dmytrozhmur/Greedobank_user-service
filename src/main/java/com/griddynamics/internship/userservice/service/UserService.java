@@ -2,7 +2,7 @@ package com.griddynamics.internship.userservice.service;
 
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
-import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
 import com.griddynamics.internship.userservice.model.user.JwtUser;
@@ -58,7 +58,7 @@ public class UserService {
                 .orElseThrow(() -> new NonExistentDataException("User doesn't exist")));
     }
 
-    public void createUser(SignupRequest signup) {
+    public void createUser(UserDataRequest signup) {
         if(userRepository.findByEmail(signup.getEmail()) != null)
             throw new EmailExistsException(EMAIL_IN_USE);
 
@@ -96,5 +96,27 @@ public class UserService {
                 email,
                 ((GrantedAuthority) userDetails.getAuthorities().toArray()[0]).getAuthority()
         );
+    }
+
+    public void updateUser(int userId, UserDataRequest userDataRequest) {
+        User updatedUser = userRepository.getReferenceById(userId);
+
+        String firstName = userDataRequest.getFirstName();
+        if(firstName != null) updatedUser.setFirstName(firstName);
+
+        String lastName = userDataRequest.getLastName();
+        if(lastName != null) updatedUser.setLastName(lastName);
+
+        String email = userDataRequest.getEmail();
+        if(email != null) updatedUser.setEmail(email);
+
+        String password = userDataRequest.getPassword();
+        if(password != null) updatedUser.setPassword(password);
+
+        userRepository.save(updatedUser);
+    }
+
+    public void deleteUser(int userId) {
+        userRepository.deleteById(userId);
     }
 }

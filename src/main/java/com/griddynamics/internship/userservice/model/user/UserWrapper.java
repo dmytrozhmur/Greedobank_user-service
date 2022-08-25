@@ -1,6 +1,5 @@
 package com.griddynamics.internship.userservice.model.user;
 
-import com.griddynamics.internship.userservice.model.user.User;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

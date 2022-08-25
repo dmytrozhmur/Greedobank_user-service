@@ -1,5 +1,7 @@
 package com.griddynamics.internship.userservice.controller;
 
+import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
+import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.service.UserService;
@@ -12,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -55,9 +60,45 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
-    public ResponseEntity<UserDTO> getUser(@AuthenticationPrincipal UserWrapper authUser,
-                                           @PathVariable("id") int id) {
+    public ResponseEntity<UserDTO> getUserInfo(@AuthenticationPrincipal UserWrapper authUser,
+                                               @PathVariable("id") int id) {
         UserDTO user = userService.findUser(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping("/api/v1/users/{id}")
+    @Operation(summary = "Update user by id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Get user",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unknown sender",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "403", description = "Access denied",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
+    public ResponseEntity<JsonResponse<String>> updateAccount(@AuthenticationPrincipal UserWrapper authUser,
+                                                              @RequestBody UserDataRequest userDataRequest,
+                                                              @PathVariable("id") int id) {
+        userService.updateUser(id, userDataRequest);
+        return ResponseEntity.ok(new JsonResponse<>("Account has been updated"));
+    }
+
+    @DeleteMapping("/api/v1/users/{id}")
+    @Operation(summary = "Delete user by id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Get user",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unknown sender",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "403", description = "Access denied",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<JsonResponse<String>> terminateAccount(@PathVariable("id") int id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new JsonResponse<>("Account has been deleted"));
     }
 }
