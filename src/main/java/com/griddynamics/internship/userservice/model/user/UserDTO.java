@@ -3,6 +3,7 @@ package com.griddynamics.internship.userservice.model.user;
 import com.griddynamics.internship.userservice.model.role.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,14 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(name = "user", description = "user data")
 public class UserDTO {
     @NonNull private int id;
-    @Size(min = 1, max = 45) private String firstName;
-    @Size(min = 1, max = 45) private String lastName;
+    @Size(min = 1, max = 45) @EqualsAndHashCode.Exclude private String firstName;
+    @Size(min = 1, max = 45) @EqualsAndHashCode.Exclude private String lastName;
     @Size(max = 60) @Email @NonNull private String email;
     @NonNull private Role role;
 
@@ -30,20 +32,5 @@ public class UserDTO {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.role = user.getRole();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return Objects.equals(firstName, userDTO.firstName)
-                && Objects.equals(lastName, userDTO.lastName)
-                && Objects.equals(email, userDTO.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return 43 * (email == null ? 0 : email.length());
     }
 }

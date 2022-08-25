@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.model.user;
 
 import com.griddynamics.internship.userservice.model.role.Role;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 @Getter
 @Entity(name = "user")
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class User {
     @Id
