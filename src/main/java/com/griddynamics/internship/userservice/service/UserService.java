@@ -99,6 +99,7 @@ public class UserService {
     }
 
     public void updateUser(int userId, UserDataRequest userDataRequest) {
+        if (!userRepository.existsById(userId)) throw new NonExistentDataException("User not found");
         User updatedUser = userRepository.getReferenceById(userId);
 
         String firstName = userDataRequest.getFirstName();

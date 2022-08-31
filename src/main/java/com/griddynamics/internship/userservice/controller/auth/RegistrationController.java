@@ -1,5 +1,6 @@
 package com.griddynamics.internship.userservice.controller.auth;
 
+import com.griddynamics.internship.userservice.communication.validation.OnPost;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,7 @@ import java.util.*;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 
+@Validated
 @RestController
 public class RegistrationController {
     @Autowired
@@ -45,6 +48,7 @@ public class RegistrationController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class)))
     })
+    @Validated(OnPost.class)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<JsonResponse<String>> registerUser(
             @RequestBody @Valid UserDataRequest userDataRequest) {
