@@ -26,16 +26,16 @@ public class UserDataRequest {
     private static final String EMAIL_PATTERN
             = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
-    @NotBlank(message = EMPTY_FIELD, groups = OnPost.class)
-    @Size(max = 45, message = INAPPROPRIATE_SIZE, groups = OnUpsert.class)
+    @NotNull(message = EMPTY_FIELD, groups = OnPost.class)
+    @Size(min = 1, max = 45, message = INAPPROPRIATE_SIZE, groups = OnUpsert.class)
     @NonNull private String firstName;
 
-    @NotBlank(message = EMPTY_FIELD, groups = OnPost.class)
-    @Size(max = 45, message = INAPPROPRIATE_SIZE, groups = OnUpsert.class)
+    @NotNull(message = EMPTY_FIELD, groups = OnPost.class)
+    @Size(min = 1, max = 45, message = INAPPROPRIATE_SIZE, groups = OnUpsert.class)
     @NonNull private String lastName;
 
-    @NotBlank(message = EMPTY_FIELD, groups = OnPost.class)
-    @Size(max = 45, message = INAPPROPRIATE_SIZE, groups = OnUpsert.class)
+    @NotNull(message = EMPTY_FIELD, groups = OnPost.class)
+    @Size(min = 1, max = 45, message = INAPPROPRIATE_SIZE, groups = OnUpsert.class)
     @Email(regexp = EMAIL_PATTERN, message = INCORRECT_FORMAT, groups = OnUpsert.class)
     @NonNull private String email;
 

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
-
+@Validated
 @RestController
 public class UserController {
     @Autowired
@@ -70,6 +72,7 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update user by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get user",
@@ -82,14 +85,15 @@ public class UserController {
     })
     @Validated(OnUpsert.class)
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
-    public ResponseEntity<JsonResponse<String>> updateAccount(@AuthenticationPrincipal UserWrapper authUser,
+    public JsonResponse<String> updateAccount(@AuthenticationPrincipal UserWrapper authUser,
                                                               @RequestBody @Valid UserDataRequest userDataRequest,
                                                               @PathVariable("id") int id) {
         userService.updateUser(id, userDataRequest);
-        return ResponseEntity.ok(new JsonResponse<>("Account has been updated"));
+        return new JsonResponse<>("Account has been updated");
     }
 
     @DeleteMapping("/api/v1/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete user by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get user",
@@ -101,8 +105,8 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<JsonResponse<String>> terminateAccount(@PathVariable("id") int id) {
+    public JsonResponse<String> terminateAccount(@PathVariable("id") int id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok(new JsonResponse<>("Account has been deleted"));
+        return new JsonResponse<>("Account has been deleted");
     }
 }

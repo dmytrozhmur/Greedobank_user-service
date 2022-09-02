@@ -13,6 +13,9 @@ import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
+import com.griddynamics.internship.userservice.utils.RequestMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,13 +34,13 @@ import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMA
 public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-
     @Autowired
     private RefreshmentService refreshmentService;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
+    private Logger logger = LoggerFactory.getLogger(UserService.class.getName());
     
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -102,17 +105,7 @@ public class UserService {
         if (!userRepository.existsById(userId)) throw new NonExistentDataException("User not found");
         User updatedUser = userRepository.getReferenceById(userId);
 
-        String firstName = userDataRequest.getFirstName();
-        if(firstName != null && !firstName.isEmpty()) updatedUser.setFirstName(firstName);
-
-        String lastName = userDataRequest.getLastName();
-        if(lastName != null && !lastName.isEmpty()) updatedUser.setLastName(lastName);
-
-        String email = userDataRequest.getEmail();
-        if(email != null && !email.isEmpty()) updatedUser.setEmail(email);
-
-        String password = userDataRequest.getPassword();
-        if(password != null && !password.isEmpty()) updatedUser.setPassword(password);
+        RequestMapper.toUser(userDataRequest, updatedUser);
 
         userRepository.save(updatedUser);
     }

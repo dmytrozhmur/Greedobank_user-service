@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
+import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -59,5 +61,15 @@ public class GlobalExceptionController {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new JsonResponse<>(exception.getMessage()));
+    }
+
+    @ExceptionHandler(EmailExistsException.class)
+    public ResponseEntity<JsonResponse<String>> emailRepetitionError(
+            EmailExistsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new JsonResponse<>(FAILURE, Collections.singletonMap(
+                        "email", new String[]{exception.getMessage()}
+                )));
     }
 }
