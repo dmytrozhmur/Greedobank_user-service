@@ -12,6 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,31 +28,19 @@ public class GlobalExceptionController {
     public ResponseEntity<JsonResponse<String>> notValidFieldError(ConstraintViolationException exception) {
         Map<String, String[]> errors = new LinkedHashMap<>();
         Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
-        //List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
         violations.stream()
                 .collect(groupingBy(ConstraintViolation::getPropertyPath))
                 .forEach((key, value) -> {
-                    Stream keyStream = ((Collection) key).stream();
+                    Path.Node field = null;
+                    for (Iterator<Path.Node> iterator = key.iterator(); iterator.hasNext(); field = iterator.next()) {}
                     errors.put(
-                        keyStream.skip(keyStream.count() - 1).findFirst().get().toString(),
+                        field.getName(),
                         value.stream()
                                     .map(ConstraintViolation::getMessage)
                                     .toArray(String[]::new)
                     );
                 });
-
-//                .forEach((path, list) -> errors.put(
-//                        path,
-//                        list.stream()
-//                                .map(ConstraintViolation::getMessage)
-//                                .toArray(String[]::new)));
-
-//        fieldErrors.stream()
-//                .collect(groupingBy(FieldError::getField))
-//                .forEach((name, list) -> errors.put(name, list.stream()
-//                        .map(FieldError::getDefaultMessage)
-//                        .toArray(String[]::new)));
 
         return ResponseEntity
                 .badRequest()

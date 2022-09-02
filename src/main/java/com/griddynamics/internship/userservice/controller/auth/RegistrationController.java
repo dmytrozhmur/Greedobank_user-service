@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.controller.auth;
 
 import com.griddynamics.internship.userservice.communication.validation.OnPost;
+import com.griddynamics.internship.userservice.communication.validation.OnUpsert;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
@@ -48,7 +49,7 @@ public class RegistrationController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = JsonResponse.class)))
     })
-    @Validated(OnPost.class)
+    @Validated({OnUpsert.class, OnPost.class})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<JsonResponse<String>> registerUser(
             @RequestBody @Valid UserDataRequest userDataRequest) {

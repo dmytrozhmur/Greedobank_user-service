@@ -2,7 +2,7 @@ package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
-import com.griddynamics.internship.userservice.communication.validation.OnPut;
+import com.griddynamics.internship.userservice.communication.validation.OnUpsert;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.service.UserService;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 
@@ -79,10 +80,10 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Access denied",
                     content = @Content(mediaType = "application/json"))
     })
-    @Validated(OnPut.class)
+    @Validated(OnUpsert.class)
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
     public ResponseEntity<JsonResponse<String>> updateAccount(@AuthenticationPrincipal UserWrapper authUser,
-                                                              @RequestBody UserDataRequest userDataRequest,
+                                                              @RequestBody @Valid UserDataRequest userDataRequest,
                                                               @PathVariable("id") int id) {
         userService.updateUser(id, userDataRequest);
         return ResponseEntity.ok(new JsonResponse<>("Account has been updated"));

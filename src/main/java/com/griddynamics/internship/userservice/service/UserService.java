@@ -103,16 +103,16 @@ public class UserService {
         User updatedUser = userRepository.getReferenceById(userId);
 
         String firstName = userDataRequest.getFirstName();
-        if(firstName != null) updatedUser.setFirstName(firstName);
+        if(firstName != null && !firstName.isEmpty()) updatedUser.setFirstName(firstName);
 
         String lastName = userDataRequest.getLastName();
-        if(lastName != null) updatedUser.setLastName(lastName);
+        if(lastName != null && !lastName.isEmpty()) updatedUser.setLastName(lastName);
 
         String email = userDataRequest.getEmail();
-        if(email != null) updatedUser.setEmail(email);
+        if(email != null && !email.isEmpty()) updatedUser.setEmail(email);
 
         String password = userDataRequest.getPassword();
-        if(password != null) updatedUser.setPassword(password);
+        if(password != null && !password.isEmpty()) updatedUser.setPassword(password);
 
         userRepository.save(updatedUser);
     }

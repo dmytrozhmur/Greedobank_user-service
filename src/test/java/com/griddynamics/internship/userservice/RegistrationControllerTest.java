@@ -76,7 +76,7 @@ public class RegistrationControllerTest {
                         "pass"
         ));
 
-        assertThat(actual).contains(EMPTY_FIELD, EXCEEDED_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
+        assertThat(actual).contains(EMPTY_FIELD, INAPPROPRIATE_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
     }
 
     @Test
