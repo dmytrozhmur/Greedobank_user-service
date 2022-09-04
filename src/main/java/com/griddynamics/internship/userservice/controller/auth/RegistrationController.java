@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -38,14 +39,14 @@ public class RegistrationController {
     private UserService userService;
 
     @PostMapping("/api/v1/signup")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Register user")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "User created",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JsonResponse.class))),
+                            schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Invalid field format",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JsonResponse.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
@@ -56,11 +57,9 @@ public class RegistrationController {
     })
     @Validated({OnUpsert.class, OnPost.class})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<JsonResponse<String>> registerUser(
+    public JsonResponse<String> registerUser(
             @RequestBody @Valid UserDataRequest userDataRequest) {
         userService.createUser(userDataRequest);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new JsonResponse<>(SUCCESS));
+        return new JsonResponse<>(SUCCESS);
     }
 }

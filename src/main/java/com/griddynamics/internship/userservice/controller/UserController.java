@@ -52,6 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get user by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get user",
@@ -65,10 +66,10 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
-    public ResponseEntity<UserDTO> getUserInfo(@AuthenticationPrincipal UserWrapper authUser,
+    public JsonResponse<UserDTO> getUserInfo(@AuthenticationPrincipal UserWrapper authUser,
                                                @PathVariable("id") int id) {
         UserDTO user = userService.findUser(id);
-        return ResponseEntity.ok(user);
+        return new JsonResponse<>(user);
     }
 
     @PatchMapping("/api/v1/users/{id}")
@@ -77,7 +78,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get user",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserDTO.class))),
+                            schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
@@ -98,7 +99,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get user",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserDTO.class))),
+                            schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "401", description = "Unknown sender",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "403", description = "Access denied",
