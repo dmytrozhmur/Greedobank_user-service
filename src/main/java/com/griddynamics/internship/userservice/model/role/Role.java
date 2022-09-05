@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.model;
+package com.griddynamics.internship.userservice.model.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

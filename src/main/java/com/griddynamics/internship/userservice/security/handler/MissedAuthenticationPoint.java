@@ -12,7 +12,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Collections;
 
 @Component
 public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
@@ -22,8 +22,10 @@ public class MissedAuthenticationPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        JsonResponse<String> missedAuthResponse =
-                new JsonResponse<>(authException.getMessage());
-        mapper.writeValue(response.getOutputStream(), missedAuthResponse);
+
+        JsonResponse<String> missedAuthResponse = new JsonResponse<>(authException.getMessage());
+        ServletOutputStream responseStream = response.getOutputStream();
+
+        mapper.writeValue(responseStream, missedAuthResponse);
     }
 }

@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.model;
+package com.griddynamics.internship.userservice.model.role;
 
 public enum RoleTitle {
     ROLE_ADMIN,

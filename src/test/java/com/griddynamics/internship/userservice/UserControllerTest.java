@@ -1,8 +1,8 @@
 package com.griddynamics.internship.userservice;
 
-import com.griddynamics.internship.userservice.model.Role;
-import com.griddynamics.internship.userservice.model.RoleTitle;
-import com.griddynamics.internship.userservice.model.UserDTO;
+import com.griddynamics.internship.userservice.model.role.Role;
+import com.griddynamics.internship.userservice.model.role.RoleTitle;
+import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
 

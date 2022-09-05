@@ -1,14 +1,12 @@
-package com.griddynamics.internship.userservice.model;
+package com.griddynamics.internship.userservice.model.user;
 
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 public class JwtUser {
-    @NonNull private String token;
+    @NonNull private String accessToken;
+    @NonNull private String refreshToken;
     private String type = "Bearer";
     @NonNull private Long id;
     @NonNull private String email;

@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice.controller;
 
-import com.griddynamics.internship.userservice.model.UserDTO;
-import com.griddynamics.internship.userservice.model.UserWrapper;
+import com.griddynamics.internship.userservice.model.user.UserDTO;
+import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.List;
 
 
 @RestController

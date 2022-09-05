@@ -2,6 +2,7 @@ package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -38,7 +39,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<JsonResponse<String>> bodyMissedError() {
         return ResponseEntity
-                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .unprocessableEntity()
                 .body(new JsonResponse<>(INVALID_BODY));
     }
 

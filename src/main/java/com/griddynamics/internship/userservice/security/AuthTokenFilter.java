@@ -1,10 +1,15 @@
 package com.griddynamics.internship.userservice.security;
 
-import com.griddynamics.internship.userservice.model.UserWrapper;
+import com.griddynamics.internship.userservice.exception.NonExistentDataException;
+import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
+import org.flywaydb.core.api.ErrorDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,12 +29,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             LoggerFactory.getLogger(AuthTokenFilter.class.getName());
     public static final String AUTH_HEADER_NAME = "Authorization";
     public static final String AUTH_HEADER_PREFIX = "Bearer ";
+    private static final String TOKEN_HEADER_NAME = "Token-Validity";
+
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
+
         if(token != null) {
             try {
                 String email = JwtUtils.getEmail(token);
@@ -42,6 +50,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                response.setHeader(TOKEN_HEADER_NAME, "Token is valid");
+            } catch (SignatureException e) {
+                response.setHeader(TOKEN_HEADER_NAME, "Token is wrong");
+            } catch (ExpiredJwtException e) {
+                response.setHeader(TOKEN_HEADER_NAME, "Token has expired");
             } catch (UsernameNotFoundException | IllegalArgumentException e) {
                 logger.error(e.getMessage(), e);
             }

@@ -1,10 +1,13 @@
 package com.griddynamics.internship.userservice.controller.auth;
 
+import com.griddynamics.internship.userservice.communication.request.RefreshmentRequest;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
-import com.griddynamics.internship.userservice.exception.SignInException;
-import com.griddynamics.internship.userservice.model.JwtUser;
+import com.griddynamics.internship.userservice.model.token.JwtRefreshment;
+import com.griddynamics.internship.userservice.model.user.JwtUser;
+import com.griddynamics.internship.userservice.service.RefreshmentService;
 import com.griddynamics.internship.userservice.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,19 +28,21 @@ import javax.validation.Valid;
 public class AuthenticationController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RefreshmentService refreshmentService;
 
     @PostMapping("/api/v1/signin")
     @Operation(summary = "Authenticate user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User authenticated",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JsonResponse.class))),
+                            schema = @Schema(implementation = JwtUser.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid field(s) format",
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JsonResponse.class))),
-            @ApiResponse(responseCode = "422", description = "Invalid email or password",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JsonResponse.class)))
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "422", description = "Invalid body",
+                    content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<JsonResponse<JwtUser>> authenticateUser(
             @RequestBody @Valid SigninRequest signinRequest) {
@@ -45,17 +50,30 @@ public class AuthenticationController {
         return ResponseEntity.ok(new JsonResponse<>(jwtUser));
     }
 
-    @ExceptionHandler(SignInException.class)
-    public ResponseEntity<JsonResponse<String>> authError(SignInException exception) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new JsonResponse<>(exception.getMessage()));
+    @PostMapping("/api/v1/refreshToken")
+    @Operation(summary = "Get new access token")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Access token sent",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JwtRefreshment.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid field(s) format",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Token for refresh not found",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "422", description = "Invalid body format",
+                    content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<JsonResponse<JwtRefreshment>> refreshAuthentication(
+            @RequestBody @Valid RefreshmentRequest refreshmentRequest) {
+        JwtRefreshment refreshment = refreshmentService
+                .updateAccessToken(refreshmentRequest.getRefreshToken());
+        return ResponseEntity.ok(new JsonResponse<>(refreshment));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<JsonResponse<String>> invalidCredentialsError(BadCredentialsException exception) {
         return ResponseEntity
-                .unprocessableEntity()
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResponse<>(exception.getMessage()));
     }
 }
