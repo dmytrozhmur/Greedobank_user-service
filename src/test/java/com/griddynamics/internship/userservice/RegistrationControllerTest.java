@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice;
 
-import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class RegistrationControllerTest {
         String actual = getActual(
                 token,
                 targetUrl,
-                new SignupRequest(
+                new UserDataRequest(
                         "Pavlo",
                         "Zibrov",
                         String.format(
@@ -69,14 +69,14 @@ public class RegistrationControllerTest {
         String actual = getActual(
                 token,
                 targetUrl,
-                new SignupRequest(
+                new UserDataRequest(
                         "",
                         "Zibrov",
                         "svjndsglvnlngjbkmgfblkghbfkdjnfdvjlmrlmtbkrtb@gmail.u",
                         "pass"
         ));
 
-        assertThat(actual).contains(EMPTY_FIELD, EXCEEDED_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
+        assertThat(actual).contains(EMPTY_FIELD, INAPPROPRIATE_SIZE, INCORRECT_FORMAT, INVALID_PASSWORD_LENGTH);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class RegistrationControllerTest {
         String targetUrl = String.format(URL_FORMAT, port, TARGET);
 
         String actual = getActual(token, targetUrl,
-                new SignupRequest(
+                new UserDataRequest(
                         "Dmytro",
                         "Zhmur",
                         USED_EMAIL,
@@ -99,7 +99,7 @@ public class RegistrationControllerTest {
         assertThat(actual).contains(EMAIL_IN_USE);
     }
 
-    private String getActual(String token, String targetUrl, SignupRequest signup) {
+    private String getActual(String token, String targetUrl, UserDataRequest signup) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<Object> request = new HttpEntity<>(
