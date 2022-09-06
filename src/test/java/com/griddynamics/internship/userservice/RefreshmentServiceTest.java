@@ -35,6 +35,7 @@ public class RefreshmentServiceTest {
     private static final String TEST_PASSWORD = "password";
     private static final String TEST_REFRESH_TOKEN = "abcdef-ghijkl-mnopqr-stuvw-xyz";
     public static final String TOKEN_TYPE = "Bearer";
+    private static final int TEST_ID = 1;
     @MockBean
     private RefreshmentRepository refreshmentRepository;
     @MockBean
@@ -85,6 +86,7 @@ public class RefreshmentServiceTest {
 
     private static User createTestUser() {
         return new User(
+                TEST_ID,
                 TEST_FIRSTNAME,
                 TEST_LASTNAME,
                 EMAIL_PARAMETER,
