@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.datasource.repo;
+package com.griddynamics.internship.userservice.repo;
 
 import com.griddynamics.internship.userservice.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

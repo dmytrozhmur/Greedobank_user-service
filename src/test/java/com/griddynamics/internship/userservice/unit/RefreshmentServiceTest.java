@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice;
+package com.griddynamics.internship.userservice.unit;
 
 import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.token.JwtRefreshment;
@@ -18,9 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
-import java.util.UUID;
 
-import static ch.qos.logback.classic.PatternLayout.HEADER_PREFIX;
 import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

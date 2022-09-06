@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice;
+package com.griddynamics.internship.userservice.unit;
 
 import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.role.RoleTitle;

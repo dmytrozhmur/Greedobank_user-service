@@ -1,6 +1,5 @@
 package com.griddynamics.internship.userservice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.griddynamics.internship.userservice.exception.InactiveRefreshmentException;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.token.JwtRefreshment;
@@ -9,10 +8,8 @@ import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RefreshmentRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
