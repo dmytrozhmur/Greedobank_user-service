@@ -2,7 +2,7 @@ package com.griddynamics.internship.userservice.service;
 
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
-import com.griddynamics.internship.userservice.communication.request.SignupRequest;
+import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
 import com.griddynamics.internship.userservice.model.user.JwtUser;
@@ -13,6 +13,9 @@ import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
+import com.griddynamics.internship.userservice.utils.RequestMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,13 +34,13 @@ import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMA
 public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-
     @Autowired
     private RefreshmentService refreshmentService;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
+    private Logger logger = LoggerFactory.getLogger(UserService.class.getName());
     
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -58,7 +61,7 @@ public class UserService {
                 .orElseThrow(() -> new NonExistentDataException("User doesn't exist")));
     }
 
-    public void createUser(SignupRequest signup) {
+    public void createUser(UserDataRequest signup) {
         if(userRepository.findByEmail(signup.getEmail()) != null)
             throw new EmailExistsException(EMAIL_IN_USE);
 
@@ -96,5 +99,18 @@ public class UserService {
                 email,
                 ((GrantedAuthority) userDetails.getAuthorities().toArray()[0]).getAuthority()
         );
+    }
+
+    public void updateUser(int userId, UserDataRequest userDataRequest) {
+        if (!userRepository.existsById(userId)) throw new NonExistentDataException("User not found");
+        User updatedUser = userRepository.getReferenceById(userId);
+
+        RequestMapper.toUser(userDataRequest, updatedUser);
+
+        userRepository.save(updatedUser);
+    }
+
+    public void deleteUser(int userId) {
+        userRepository.deleteById(userId);
     }
 }

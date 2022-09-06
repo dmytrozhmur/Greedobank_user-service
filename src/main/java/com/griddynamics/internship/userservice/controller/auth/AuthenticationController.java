@@ -20,6 +20,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -32,6 +33,7 @@ public class AuthenticationController {
     private RefreshmentService refreshmentService;
 
     @PostMapping("/api/v1/signin")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Authenticate user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User authenticated",
@@ -44,13 +46,14 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "422", description = "Invalid body",
                     content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<JsonResponse<JwtUser>> authenticateUser(
+    public JsonResponse<JwtUser> authenticateUser(
             @RequestBody @Valid SigninRequest signinRequest) {
         JwtUser jwtUser = userService.verifyUser(signinRequest);
-        return ResponseEntity.ok(new JsonResponse<>(jwtUser));
+        return new JsonResponse<>(jwtUser);
     }
 
     @PostMapping("/api/v1/refreshToken")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get new access token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Access token sent",
@@ -63,17 +66,16 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "422", description = "Invalid body format",
                     content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<JsonResponse<JwtRefreshment>> refreshAuthentication(
+    public JsonResponse<JwtRefreshment> refreshAuthentication(
             @RequestBody @Valid RefreshmentRequest refreshmentRequest) {
         JwtRefreshment refreshment = refreshmentService
                 .updateAccessToken(refreshmentRequest.getRefreshToken());
-        return ResponseEntity.ok(new JsonResponse<>(refreshment));
+        return new JsonResponse<>(refreshment);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<JsonResponse<String>> invalidCredentialsError(BadCredentialsException exception) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new JsonResponse<>(exception.getMessage()));
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public JsonResponse<String> invalidCredentialsError(BadCredentialsException exception) {
+        return new JsonResponse<>(exception.getMessage());
     }
 }

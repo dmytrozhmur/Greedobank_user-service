@@ -4,6 +4,7 @@ import com.griddynamics.internship.userservice.model.role.Role;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -16,7 +17,7 @@ import javax.persistence.ManyToOne;
 
 import java.util.Objects;
 
-@Getter
+@Getter @Setter
 @Entity(name = "user")
 @RequiredArgsConstructor
 public class User {
