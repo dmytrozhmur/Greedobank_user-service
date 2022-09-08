@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface RequestMapper {
-    RequestMapper INSTANCE = Mappers.getMapper(RequestMapper.class);
+public interface PartialRequestMapper {
+    PartialRequestMapper INSTANCE = Mappers.getMapper(PartialRequestMapper.class);
 
     @Mapping(source = "request.firstName", target = "firstName",
             defaultExpression = "java(user.getFirstName())")

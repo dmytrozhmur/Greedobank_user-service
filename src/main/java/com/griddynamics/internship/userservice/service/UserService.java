@@ -1,7 +1,8 @@
 package com.griddynamics.internship.userservice.service;
 
+import com.griddynamics.internship.userservice.communication.mapper.FullRequestMapper;
 import com.griddynamics.internship.userservice.communication.mapper.FullResponseMapper;
-import com.griddynamics.internship.userservice.communication.mapper.RequestMapper;
+import com.griddynamics.internship.userservice.communication.mapper.PartialRequestMapper;
 import com.griddynamics.internship.userservice.communication.mapper.PartialResponseMapper;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
@@ -9,16 +10,18 @@ import com.griddynamics.internship.userservice.communication.request.UserDataReq
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
 import com.griddynamics.internship.userservice.model.user.JwtUser;
-import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.user.User;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +33,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
-import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 
@@ -44,6 +46,8 @@ public class UserService {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private ApplicationContext applicationContext;
     private Logger logger = LoggerFactory.getLogger(UserService.class.getName());
     
     @Autowired
@@ -74,18 +78,12 @@ public class UserService {
     public void createUser(UserDataRequest signup) {
         chechEmail(signup);
 
-        String encodedPassword = passwordEncoder.encode(signup.getPassword());
-        Role specifiedRole = signup.getRole();
-        Role appropriateRole = specifiedRole
-                == null ? roleRepository.findByTitle(defaultTitle()) : specifiedRole;
+        FullRequestMapper mapper = Mappers
+                .getMapper(FullRequestMapper.class);
+        applicationContext.getAutowireCapableBeanFactory().autowireBean(mapper);
 
-        userRepository.save(new User(
-                signup.getFirstName(),
-                signup.getLastName(),
-                signup.getEmail(),
-                encodedPassword,
-                appropriateRole)
-        );
+
+        userRepository.save(mapper.requestToUser(signup));
     }
 
     public JwtUser verifyUser(SigninRequest signin) {
@@ -115,8 +113,8 @@ public class UserService {
         chechEmail(userDataRequest);
 
         User updatedUser = userRepository.getReferenceById(userId);
-
-        updatedUser = RequestMapper.INSTANCE.requestToUser(userDataRequest, updatedUser);
+        updatedUser = PartialRequestMapper.INSTANCE
+                .requestToUser(userDataRequest, updatedUser);
 
         userRepository.save(updatedUser);
     }
