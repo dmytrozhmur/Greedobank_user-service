@@ -8,19 +8,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(name = "user", description = "user data")
 public class UserDTO {
-    @NonNull private int id;
+    @NonNull private Integer id;
     @NotBlank
     @Size(min = 1, max = 45)
     private String firstName;

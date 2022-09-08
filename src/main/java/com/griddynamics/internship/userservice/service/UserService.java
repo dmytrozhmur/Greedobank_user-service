@@ -1,5 +1,8 @@
 package com.griddynamics.internship.userservice.service;
 
+import com.griddynamics.internship.userservice.communication.mapper.FullResponseMapper;
+import com.griddynamics.internship.userservice.communication.mapper.RequestMapper;
+import com.griddynamics.internship.userservice.communication.mapper.PartialResponseMapper;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
@@ -13,7 +16,6 @@ import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
-import com.griddynamics.internship.userservice.utils.RequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,21 +53,16 @@ public class UserService {
     }
 
     public List<UserDTO> findAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(UserDTO::new)
-                .toList();
+        return FullResponseMapper.INSTANCE.usersToDTO(userRepository.findAll());
     }
 
     public List<UserDTO> findAll(String email) {
         User user = userRepository.findByEmail(email);
         if(user == null) throw new NonExistentDataException(USER_NOT_FOUND);
 
-        return Collections.singletonList(new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
-        ));
+        return Collections.singletonList(
+                PartialResponseMapper.INSTANCE.userToDTO(user)
+        );
     }
 
     public UserDTO findUser(int id) {
@@ -120,7 +116,7 @@ public class UserService {
 
         User updatedUser = userRepository.getReferenceById(userId);
 
-        RequestMapper.toUser(userDataRequest, updatedUser);
+        updatedUser = RequestMapper.INSTANCE.requestToUser(userDataRequest, updatedUser);
 
         userRepository.save(updatedUser);
     }
