@@ -11,17 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
 
-//@Component
 @Mapper(componentModel = "spring")
 public abstract class FullRequestMapper {
-    //public static FullRequestMapper INSTANCE = Mappers.getMapper(FullRequestMapper.class);
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
 
     public User requestToUser(UserDataRequest request) {
-
         Role specifiedRole = request.getRole();
         Role appropriateRole = specifiedRole
                 == null ? roleRepository.findByTitle(defaultTitle()) : specifiedRole;
