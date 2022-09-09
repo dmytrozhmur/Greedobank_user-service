@@ -31,9 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(value = "insert_first_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "clear_database.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class UserControllerTest {
+public class UserControllerTest extends IntegrationTest {
     private static final String UNKNOWN_SENDER = "Full authentication is required to access this resource";
     private static final String ACCESS_DENIED = "Access is denied";
     private static final int USER_ID = 2;
@@ -41,21 +39,16 @@ public class UserControllerTest {
     private static final String USER_PASSWORD = "password3";
     private static final String USER_FIRSTNAME = "Oleksandr";
     private static final String USER_LASTNAME = "Kukurik";
-    private static final String URL_FORMAT = "http://localhost:%d/api/v1/users/";
-    private String targetUrl;
-    private HttpHeaders httpHeaders = new HttpHeaders();
-
-    @LocalServerPort
-    private int port;
-    @Autowired
-    private TestRestTemplate restTemplate;
     @Autowired
     private UserRepository userRepository;
+    {
+        target = "users/";
+    }
 
+    @Override
     @BeforeEach
     public void buildPath() {
-        targetUrl = String.format(URL_FORMAT, port);
-        httpHeaders.setBearerAuth(signinUser(restTemplate, port).getAccessToken());
+        super.buildPath();
 
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
@@ -105,10 +98,10 @@ public class UserControllerTest {
 
     @Test
     public void getUserByIdSuccess() {
-        targetUrl += USER_ID;
+        String specialUrl = this.targetUrl.concat(String.valueOf(USER_ID));
 
         UserDTO actualResponse = restTemplate.exchange(
-                targetUrl,
+                specialUrl,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 new ParameterizedTypeReference<JsonResponse<UserDTO>>() {}

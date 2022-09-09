@@ -50,7 +50,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content(mediaType = "application/json"))
     })
-    @PreAuthorize("hasRole('ADMIN') or #email.present")
+    @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
     public ResponseEntity<List<UserDTO>> getUserList(@RequestParam Optional<String> email) {
         List<UserDTO> users = email.isPresent()
                 ? userService.findAll(email.get()) : userService.findAll();
@@ -73,7 +73,7 @@ public class UserController {
     })
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
     public JsonResponse<UserDTO> getUserInfo(@AuthenticationPrincipal UserWrapper authUser,
-                                               @PathVariable("id") int id) {
+                                             @PathVariable("id") int id) {
         UserDTO user = userService.findUser(id);
         return new JsonResponse<>(user);
     }
@@ -93,8 +93,8 @@ public class UserController {
     @Validated(OnUpsert.class)
     @PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or #authUser.id == #id)")
     public JsonResponse<String> updateAccount(@AuthenticationPrincipal UserWrapper authUser,
-                                                              @RequestBody @Valid UserDataRequest userDataRequest,
-                                                              @PathVariable("id") int id) {
+                                              @RequestBody @Valid UserDataRequest userDataRequest,
+                                              @PathVariable("id") int id) {
         userService.updateUser(id, userDataRequest);
         return new JsonResponse<>("Account has been updated");
     }

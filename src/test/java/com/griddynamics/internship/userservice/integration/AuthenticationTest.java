@@ -21,19 +21,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ContextConfiguration
-@Sql(value = "insert_first_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "clear_database.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class AuthenticationTest {
+public class AuthenticationTest extends IntegrationTest {
     private static final String TEST_EMAIL = "dmytro.zhmur@nure.ua";
     private static final String TEST_PASSWORD = "password";
-    private static final String URL_FORMAT = "http://localhost:%d/api/v1/signin";
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-    @Autowired
-    private UserRepository userRepository;
+    private static final String SPECIAL_TARGET = "signin";
 
     @Test
     public void authenticationSuccess() {
@@ -46,6 +37,7 @@ public class AuthenticationTest {
     }
 
     public static JwtUser signinUser(TestRestTemplate restTemplate, int port, String... credentials) {
+        String specialUrl = String.format(URL_FORMAT, port, SPECIAL_TARGET);
         if(credentials.length != 2) {
             credentials = new String[] {TEST_EMAIL, TEST_PASSWORD};
         }
@@ -55,7 +47,7 @@ public class AuthenticationTest {
                 credentials[1]
         ));
         JsonResponse<JwtUser> actualResponse = restTemplate.exchange(
-                String.format(URL_FORMAT, port),
+                specialUrl,
                 HttpMethod.POST,
                 httpEntity,
                 new ParameterizedTypeReference<JsonResponse<JwtUser>>() {}

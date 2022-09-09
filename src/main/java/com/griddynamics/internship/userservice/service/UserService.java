@@ -25,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,7 +75,7 @@ public class UserService {
     }
 
     public void createUser(UserDataRequest signup) {
-        chechEmail(signup);
+        checkEmail(signup);
 
         String encodedPassword = passwordEncoder.encode(signup.getPassword());
         Role specifiedRole = signup.getRole();
@@ -116,7 +115,7 @@ public class UserService {
 
     public void updateUser(int userId, UserDataRequest userDataRequest) {
         if(!userRepository.existsById(userId)) throw new NonExistentDataException("User not found");
-        chechEmail(userDataRequest);
+        checkEmail(userDataRequest);
 
         User updatedUser = userRepository.getReferenceById(userId);
 
@@ -129,7 +128,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    private void chechEmail(UserDataRequest signup) {
+    private void checkEmail(UserDataRequest signup) {
         if(userRepository.findByEmail(signup.getEmail()) != null)
             throw new EmailExistsException(EMAIL_IN_USE);
     }

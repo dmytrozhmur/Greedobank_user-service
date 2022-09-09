@@ -26,9 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = "insert_first_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "clear_database.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class RegistrationControllerTest {
+public class RegistrationControllerTest extends IntegrationTest {
     public static final String FIRST_USED_EMAIL = "dmytro.zhmur@nure.ua";
     private static final String TEST_PASSWORD = "password";
     public static final String USED_FIRSTNAME = "Dmytro";
@@ -36,24 +34,13 @@ public class RegistrationControllerTest {
     public static final String TEST_EMAIL = "ykomiahina@griddynamics.com";
     public static final String TEST_FIRSTNAME = "Yevheniia";
     public static final String TEST_LASTNAME = "Komiahina";
-    private static final String URL_FORMAT = "http://localhost:%d/api/v1/signup";
-
-
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private UserRepository userRepository;
-    private String targetUrl;
-    private HttpHeaders httpHeaders = new HttpHeaders();
-
-    @BeforeEach
-    public void buildPath() {
-        targetUrl = String.format(URL_FORMAT, port);
-        httpHeaders.setBearerAuth(signinUser(restTemplate, port).getAccessToken());
+    {
+        target = "signup";
     }
 
     @Test
