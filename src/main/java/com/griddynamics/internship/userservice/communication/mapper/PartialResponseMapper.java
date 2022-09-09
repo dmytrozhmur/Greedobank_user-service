@@ -6,10 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PartialResponseMapper {
-    PartialResponseMapper INSTANCE = Mappers.getMapper(PartialResponseMapper.class);
-
     @Mapping(target = "firstName", ignore = true)
     @Mapping(target = "lastName", ignore = true)
     UserDTO userToDTO(User user);

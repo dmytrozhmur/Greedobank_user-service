@@ -5,7 +5,6 @@ import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.user.User;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

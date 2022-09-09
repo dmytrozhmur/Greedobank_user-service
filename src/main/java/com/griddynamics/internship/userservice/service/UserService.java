@@ -16,11 +16,7 @@ import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.utils.JwtUtils;
-import org.mapstruct.factory.Mappers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,8 +44,15 @@ public class UserService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private ApplicationContext applicationContext;
-    private Logger logger = LoggerFactory.getLogger(UserService.class.getName());
-    
+    @Autowired
+    private PartialRequestMapper updateMapper;
+    @Autowired
+    private FullRequestMapper createMapper;
+    @Autowired
+    private FullResponseMapper fullResponseMapper;
+    @Autowired
+    private PartialResponseMapper partialResponseMapper;
+
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -57,16 +60,13 @@ public class UserService {
     }
 
     public List<UserDTO> findAll() {
-        return FullResponseMapper.INSTANCE.usersToDTO(userRepository.findAll());
+        return fullResponseMapper.usersToDTO(userRepository.findAll());
     }
 
     public List<UserDTO> findAll(String email) {
         User user = userRepository.findByEmail(email);
         if(user == null) throw new NonExistentDataException(USER_NOT_FOUND);
-
-        return Collections.singletonList(
-                PartialResponseMapper.INSTANCE.userToDTO(user)
-        );
+        return Collections.singletonList(partialResponseMapper.userToDTO(user));
     }
 
     public UserDTO findUser(int id) {
@@ -76,14 +76,8 @@ public class UserService {
     }
 
     public void createUser(UserDataRequest signup) {
-        chechEmail(signup);
-
-        FullRequestMapper mapper = Mappers
-                .getMapper(FullRequestMapper.class);
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(mapper);
-
-
-        userRepository.save(mapper.requestToUser(signup));
+        checkEmail(signup);
+        userRepository.save(createMapper.requestToUser(signup));
     }
 
     public JwtUser verifyUser(SigninRequest signin) {
@@ -110,11 +104,10 @@ public class UserService {
 
     public void updateUser(int userId, UserDataRequest userDataRequest) {
         if(!userRepository.existsById(userId)) throw new NonExistentDataException("User not found");
-        chechEmail(userDataRequest);
+        checkEmail(userDataRequest);
 
         User updatedUser = userRepository.getReferenceById(userId);
-        updatedUser = PartialRequestMapper.INSTANCE
-                .requestToUser(userDataRequest, updatedUser);
+        updateMapper.requestToUser(userDataRequest, updatedUser);
 
         userRepository.save(updatedUser);
     }
@@ -123,7 +116,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    private void chechEmail(UserDataRequest signup) {
+    private void checkEmail(UserDataRequest signup) {
         if(userRepository.findByEmail(signup.getEmail()) != null)
             throw new EmailExistsException(EMAIL_IN_USE);
     }
