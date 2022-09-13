@@ -3,6 +3,7 @@ package com.griddynamics.internship.userservice.model.user;
 import com.griddynamics.internship.userservice.model.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 @Getter @Setter
 @Entity(name = "user")
+@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class User {
@@ -40,8 +42,6 @@ public class User {
     @Column(name = "email") @NonNull private String email;
     @Column(name = "password") @NonNull private String password;
     @ManyToOne @JoinColumn(name = "role_id") @NonNull private Role role;
-
-    protected User() {}
 
     @Override
     public boolean equals(Object o) {
