@@ -24,7 +24,11 @@ public abstract class IntegrationTest {
 
     @BeforeEach
     public void buildPath() {
-        targetUrl = String.format(URL_FORMAT, port, target);
+        targetUrl = String.format(URL_FORMAT, port, getTarget());
         httpHeaders.setBearerAuth(signinUser(restTemplate, port).getAccessToken());
+    }
+
+    public String getTarget() {
+        return target;
     }
 }
