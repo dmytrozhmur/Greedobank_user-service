@@ -39,9 +39,6 @@ public class RegistrationControllerTest extends IntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
-    {
-        target = "signup";
-    }
 
     @Test
     public void signupSuccess() {
@@ -117,5 +114,10 @@ public class RegistrationControllerTest extends IntegrationTest {
 
         assertEquals(FAILURE, actualMessage);
         assertEquals(EMAIL_IN_USE, actualErrors.get("email")[0]);
+    }
+
+    @Override
+    public String getTarget() {
+        return "signup";
     }
 }

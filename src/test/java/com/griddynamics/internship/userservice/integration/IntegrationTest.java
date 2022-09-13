@@ -1,5 +1,6 @@
 package com.griddynamics.internship.userservice.integration;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -16,7 +17,6 @@ public abstract class IntegrationTest {
     protected static final String URL_FORMAT = "http://localhost:%d/api/v1/%s";
     protected static String targetUrl;
     protected HttpHeaders httpHeaders = new HttpHeaders();
-    protected String target;
     @LocalServerPort
     protected int port;
     @Autowired
@@ -29,6 +29,6 @@ public abstract class IntegrationTest {
     }
 
     public String getTarget() {
-        return target;
+        return StringUtils.EMPTY;
     }
 }

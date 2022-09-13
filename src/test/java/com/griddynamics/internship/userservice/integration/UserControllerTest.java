@@ -41,9 +41,6 @@ public class UserControllerTest extends IntegrationTest {
     private static final String USER_LASTNAME = "Kukurik";
     @Autowired
     private UserRepository userRepository;
-    {
-        target = "users/";
-    }
 
     @Override
     @BeforeEach
@@ -111,5 +108,10 @@ public class UserControllerTest extends IntegrationTest {
         assertEquals(USER_EMAIL, actualResponse.getEmail());
         assertEquals(USER_FIRSTNAME, actualResponse.getFirstName());
         assertEquals(USER_LASTNAME, actualResponse.getLastName());
+    }
+
+    @Override
+    public String getTarget() {
+        return "users/";
     }
 }
