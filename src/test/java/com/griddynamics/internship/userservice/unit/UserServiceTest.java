@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.unit;
 
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
+import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.role.RoleTitle;
 import com.griddynamics.internship.userservice.model.user.User;
@@ -26,8 +27,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
@@ -134,4 +137,22 @@ public class UserServiceTest {
         assertThat(actual, is(expected));
     }
 
+    @Test
+    public void deleteUserAndCatchExceptionWhenGetItById() {
+        when(userRepository.existsById(TEST_ID)).thenReturn(true);
+        when(userRepository.getReferenceById(TEST_ID)).thenReturn(mockedUsers.get(0));
+        doAnswer((Answer<Object>) invocation -> {
+            int id = invocation.getArgument(0);
+            when(userRepository.existsById(id)).thenReturn(false);
+            return null;
+        }).when(userRepository).deleteById(any(Integer.class));
+
+        userService.deleteUser(TEST_ID);
+        Exception exception = assertThrows(
+                NonExistentDataException.class,
+                () -> userService.findUser(TEST_ID)
+        );
+
+        assertThat(exception.getMessage(), is(USER_NOT_FOUND));
+    }
 }

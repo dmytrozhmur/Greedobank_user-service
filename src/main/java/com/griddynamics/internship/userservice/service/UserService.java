@@ -39,11 +39,7 @@ public class UserService {
     @Autowired
     private RefreshmentService refreshmentService;
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private ApplicationContext applicationContext;
     @Autowired
     private PartialRequestMapper updateMapper;
     @Autowired
