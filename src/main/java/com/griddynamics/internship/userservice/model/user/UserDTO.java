@@ -25,8 +25,8 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     @NonNull private Integer id;
-    @NotBlank
-    @Size(min = 1, max = 45) private String firstName;
+    @NotBlank @Size(min = 1, max = 45)
+    private String firstName;
     @NotBlank @Size(min = 1, max = 45)
     private String lastName;
     @NotBlank @Size(max = 60) @Email
