@@ -1,5 +1,6 @@
 package com.griddynamics.internship.userservice.model.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.griddynamics.internship.userservice.model.role.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,11 +22,11 @@ import java.util.Objects;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(name = "user", description = "user data")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     @NonNull private Integer id;
     @NotBlank
-    @Size(min = 1, max = 45)
-    private String firstName;
+    @Size(min = 1, max = 45) private String firstName;
     @NotBlank @Size(min = 1, max = 45)
     private String lastName;
     @NotBlank @Size(max = 60) @Email
