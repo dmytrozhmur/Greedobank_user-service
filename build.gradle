@@ -27,6 +27,25 @@ jacocoTestReport {
 	}
 }
 
+jacocoTestCoverageVerification {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"com/griddynamics/internship/userservice/model/**/*",
+					"com/griddynamics/internship/userservice/communication/**/*"
+			])
+		}))
+	}
+
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8
+			}
+		}
+	}
+}
+
 group = 'com.griddynamics.internship'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '18'
