@@ -7,7 +7,7 @@ import com.griddynamics.internship.userservice.model.token.Refreshment;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RefreshmentRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
-import com.griddynamics.internship.userservice.utils.JwtUtils;
+import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,8 @@ import java.util.UUID;
 public class RefreshmentService {
     @Value("${token.refresh.expiration}")
     private long expiration;
+    @Autowired
+    private JwtProcessor jwtProcessor;
     private UserRepository userRepository;
     private RefreshmentRepository refreshmentRepository;
 
@@ -43,8 +45,8 @@ public class RefreshmentService {
                 .map(RefreshmentService::verifyExpiration)
                 .map(Refreshment::getUser)
                 .map(UserWrapper::new)
-                .map(JwtUtils::generateToken)
-                .map(accessToken -> new JwtRefreshment(accessToken, refreshToken))
+                .map(jwtProcessor::generateToken)
+                .map(accessToken -> new JwtRefreshment(accessToken.toString(), refreshToken))
                 .orElseThrow(() -> new NonExistentDataException("Refreshment token hasn't been found"));
     }
 

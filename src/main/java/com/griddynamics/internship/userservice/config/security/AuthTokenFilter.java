@@ -1,16 +1,13 @@
-package com.griddynamics.internship.userservice.security;
+package com.griddynamics.internship.userservice.config.security;
 
-import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
-import com.griddynamics.internship.userservice.utils.JwtUtils;
+import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
-import org.flywaydb.core.api.ErrorDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,6 +30,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             LoggerFactory.getLogger(AuthTokenFilter.class.getName());
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtProcessor jwtProcessor;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,7 +39,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         if(token != null) {
             try {
-                String email = JwtUtils.getEmail(token);
+                String email = jwtProcessor.getEmail(token);
 
                 UserWrapper userDetails = (UserWrapper) userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

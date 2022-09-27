@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.security.handler;
+package com.griddynamics.internship.userservice.component.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;

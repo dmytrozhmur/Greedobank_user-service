@@ -15,15 +15,13 @@ import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
-import com.griddynamics.internship.userservice.utils.JwtUtils;
+import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -48,6 +46,8 @@ public class UserService {
     private FullResponseMapper fullResponseMapper;
     @Autowired
     private PartialResponseMapper partialResponseMapper;
+    @Autowired
+    private JwtProcessor jwtProcessor;
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -82,7 +82,7 @@ public class UserService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(auth);
-        String token = JwtUtils.generateToken((UserWrapper) auth.getPrincipal());
+        String token = jwtProcessor.generateToken((UserWrapper) auth.getPrincipal());
         UserWrapper userDetails = (UserWrapper) auth.getPrincipal();
 
         String email = userDetails.getUsername();
