@@ -1,31 +1,5 @@
-# greedobank-kharkiv/user-service
-
-
-
-## Getting Started
-
-Download links:
-
-SSH clone URL: ssh://git@git.jetbrains.space/java-internship/greedobank-kharkiv/user-service.git
-
-HTTPS clone URL: https://git.jetbrains.space/java-internship/greedobank-kharkiv/user-service.git
-
-
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-## Prerequisites
-
-What things you need to install the software and how to install them.
-
-```
-Examples
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a production system.
-
-## Resources
-
-Add links to external resources for this project, such as CI server, bug tracker, etc.
+To launch this app in isolation mode: 
+- start your docker; 
+- open terminal in project root directory; 
+- type docker-compose up.
+Then you can open docker desktop and see two user-service containers launched and interacting in isolation.
