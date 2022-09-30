@@ -10,6 +10,7 @@ import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -34,7 +35,7 @@ public class RefreshmentService {
         Refreshment refreshment = new Refreshment(
                 UUID.randomUUID().toString(),
                 Instant.now().plusMillis(expiration),
-                userRepository.findByEmail(email)
+                userRepository.findByEmail(Pageable.unpaged(), email).getContent().get(0)
         );
         refreshmentRepository.save(refreshment);
         return refreshment;

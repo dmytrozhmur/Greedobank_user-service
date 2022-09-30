@@ -73,7 +73,9 @@ dependencies {
 	implementation('junit:junit:4.13.1')
 	implementation("org.mapstruct:mapstruct:1.5.2.Final")
 
+//	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 	compileOnly('org.projectlombok:lombok:1.18.24')
+	annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
 	annotationProcessor('org.projectlombok:lombok:1.18.24')
 	annotationProcessor('org.mapstruct:mapstruct-processor:1.5.2.Final')
 

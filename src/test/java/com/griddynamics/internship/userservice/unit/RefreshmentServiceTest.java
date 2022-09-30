@@ -1,5 +1,6 @@
 package com.griddynamics.internship.userservice.unit;
 
+import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.token.JwtRefreshment;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
@@ -16,7 +17,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
@@ -46,7 +50,9 @@ public class RefreshmentServiceTest {
     @BeforeEach
     private void mockRepo() {
         MockitoAnnotations.openMocks(this);
-        when(userRepository.findByEmail(EMAIL_PARAMETER)).thenReturn(createTestUser());
+        when(userRepository
+                .findByEmail(Pageable.unpaged(), EMAIL_PARAMETER))
+                .thenReturn(new PageImpl<>(Collections.singletonList(createTestUser())));
         when(refreshmentRepository.findByToken(TEST_REFRESH_TOKEN)).thenReturn(createTestToken());
     }
 

@@ -1,7 +1,9 @@
 package com.griddynamics.internship.userservice.integration;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
+import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -58,14 +62,15 @@ public class UserControllerTest extends IntegrationTest {
     @Test
     public void getUserListSuccess() {
         HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
-        ArrayList<UserDTO> actualResponse = restTemplate.exchange(
+        UserPage actualResponse = restTemplate.exchange(
                 targetUrl,
                 HttpMethod.GET,
                 httpEntity,
-                new ParameterizedTypeReference<ArrayList<UserDTO>>() {}
+                new ParameterizedTypeReference<UserPage>() {}
         ).getBody();
 
-        assertEquals(userRepository.findAll().stream().map(UserDTO::new).toList(), actualResponse);
+        assertEquals(userRepository.findAll().stream().map(UserDTO::new).toList(),
+                actualResponse.getContent());
     }
 
     @Test

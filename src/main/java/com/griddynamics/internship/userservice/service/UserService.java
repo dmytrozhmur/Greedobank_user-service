@@ -1,10 +1,11 @@
 package com.griddynamics.internship.userservice.service;
 
 import com.griddynamics.internship.userservice.communication.mapper.FullRequestMapper;
-import com.griddynamics.internship.userservice.communication.mapper.FullResponseMapper;
+import com.griddynamics.internship.userservice.communication.mapper.ResponseMapper;
 import com.griddynamics.internship.userservice.communication.mapper.PartialRequestMapper;
-import com.griddynamics.internship.userservice.communication.mapper.PartialResponseMapper;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
+import com.griddynamics.internship.userservice.communication.response.UserPage;
+import com.griddynamics.internship.userservice.component.holder.UserProps;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
@@ -17,15 +18,15 @@ import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
@@ -43,11 +44,11 @@ public class UserService {
     @Autowired
     private FullRequestMapper createMapper;
     @Autowired
-    private FullResponseMapper fullResponseMapper;
-    @Autowired
-    private PartialResponseMapper partialResponseMapper;
+    private ResponseMapper responseMapper;
     @Autowired
     private JwtProcessor jwtProcessor;
+    @Autowired
+    private UserProps properties;
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -55,14 +56,28 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public List<UserDTO> findAll() {
-        return fullResponseMapper.usersToDTO(userRepository.findAll());
+    public UserPage findAll(int page) {
+        int usersPerPage = properties.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page - 1, usersPerPage);
+        return responseMapper.usersToDTO(userRepository.findAll(pageRequest),
+                                         pageRequest.getPageNumber(),
+                                         pageRequest.getPageSize());
     }
 
-    public List<UserDTO> findAll(String email) {
-        User user = userRepository.findByEmail(email);
-        if(user == null) throw new NonExistentDataException(USER_NOT_FOUND);
-        return Collections.singletonList(partialResponseMapper.userToDTO(user));
+    public UserPage findAll(int page, String email) {
+        int usersPerPage = properties.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page - 1, usersPerPage);
+        Page<User> user = userRepository.findByEmail(
+                pageRequest, email);
+        
+        if(user.getNumberOfElements() == 0 && user.getTotalPages() > 0)
+            throw new NonExistentDataException("Page wasn't found");
+        else if(user.getTotalPages() == 0)
+            throw new NonExistentDataException(USER_NOT_FOUND);
+        
+        return responseMapper.usersToDTO(user,
+                                         pageRequest.getPageNumber(),
+                                         pageRequest.getPageSize());
     }
 
     public UserDTO findUser(int id) {
@@ -113,7 +128,7 @@ public class UserService {
     }
 
     private void checkEmail(UserDataRequest signup) {
-        if(userRepository.findByEmail(signup.getEmail()) != null)
+        if(userRepository.existsByEmail(signup.getEmail()))
             throw new EmailExistsException(EMAIL_IN_USE);
     }
 }

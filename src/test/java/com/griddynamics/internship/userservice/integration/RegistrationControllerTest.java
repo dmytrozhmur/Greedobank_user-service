@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,6 +35,7 @@ public class RegistrationControllerTest extends IntegrationTest {
     public static final String TEST_EMAIL = "ykomiahina@griddynamics.com";
     public static final String TEST_FIRSTNAME = "Yevheniia";
     public static final String TEST_LASTNAME = "Komiahina";
+    public static final int EXPECTED_ID = 11;
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -59,7 +61,8 @@ public class RegistrationControllerTest extends IntegrationTest {
         ).getBody();
 
         String actualMessage = actualResponse.getContent().toString();
-        User actualRegistered = userRepository.findByEmail(TEST_EMAIL);
+        User actualRegistered = userRepository
+                .findById(EXPECTED_ID).get();
 
         assertEquals(SUCCESS, actualMessage);
         assertEquals(TEST_FIRSTNAME, actualRegistered.getFirstName());

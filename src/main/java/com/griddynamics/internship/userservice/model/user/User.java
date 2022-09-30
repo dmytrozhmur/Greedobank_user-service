@@ -43,6 +43,13 @@ public class User {
     @Column(name = "password") @NonNull private String password;
     @ManyToOne @JoinColumn(name = "role_id") @NonNull private Role role;
 
+    public User(int id, @NonNull String email, @NonNull String password, @NonNull Role role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

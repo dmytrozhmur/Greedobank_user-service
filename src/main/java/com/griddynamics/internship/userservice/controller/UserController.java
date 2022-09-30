@@ -2,7 +2,9 @@ package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
+import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.communication.validation.OnUpsert;
+import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.service.UserService;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +37,7 @@ import java.util.Collection;
 @Validated
 @RestController
 public class UserController {
+    public static final int FIRST_PAGE = 1;
     @Autowired
     private UserService userService;
 
@@ -51,9 +55,14 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
-    public ResponseEntity<List<UserDTO>> getUserList(@RequestParam Optional<String> email) {
-        List<UserDTO> users = email.isPresent()
-                ? userService.findAll(email.get()) : userService.findAll();
+    public ResponseEntity<Page<UserDTO>> getUserList(@RequestParam Optional<String> email,
+                                                @RequestParam Optional<Integer> page) {
+        if(page.isPresent() && page.get() < 1)
+            throw new NonExistentDataException("Page number must be positive non-null value");
+
+        UserPage users = email.isPresent()
+                ? userService.findAll(page.orElse(FIRST_PAGE), email.get())
+                : userService.findAll(page.orElse(FIRST_PAGE));
         return ResponseEntity.ok(users);
     }
 

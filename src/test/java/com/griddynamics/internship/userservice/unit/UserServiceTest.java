@@ -9,6 +9,7 @@ import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.service.UserService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +18,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +51,9 @@ public class UserServiceTest {
     private final static String TEST_EMAIL = "dzhmur@griddynamics.com";
     private static final int TEST_ID = 0;
     public static final String TEST_PASSWORD = "password";
+    public static final int TEST_PAGE = 1;
+    @Value("${user-service.users.page-size}")
+    private int pageSize;
     @MockBean
     private UserRepository userRepository;
     @Autowired
@@ -52,9 +61,12 @@ public class UserServiceTest {
     @MockBean
     private RoleRepository roleRepository;
     private List<User> mockedUsers;
+    private static PageRequest pageRequest;
 
     @BeforeEach
     private void prepareData() {
+        pageRequest = PageRequest.of(TEST_PAGE - 1, pageSize);
+
         when(roleRepository.findByTitle(RoleTitle.defaultTitle())).thenReturn(TEST_ROLE);
         mockedUsers = new ArrayList<>(Arrays.asList(
                 new User(
@@ -83,11 +95,13 @@ public class UserServiceTest {
                 new UserDTO(1, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", TEST_ROLE)
         ));
 
-        when(userRepository.findAll()).thenReturn(mockedUsers);
+        when(userRepository
+                .findAll(pageRequest))
+                .thenReturn(new PageImpl<>(mockedUsers));
 
-        Collection<UserDTO> actual = userService.findAll();
+        Collection<UserDTO> actual = userService.findAll(TEST_PAGE).getContent();
 
-        verify(userRepository).findAll();
+        verify(userRepository).findAll(pageRequest);
         assertThat(actual, is(expected));
     }
 
@@ -97,11 +111,19 @@ public class UserServiceTest {
                 new UserDTO(TEST_ID, TEST_EMAIL, TEST_ROLE)
         );
 
-        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(mockedUsers.get(0));
+        when(userRepository
+                .findByEmail(pageRequest, TEST_EMAIL))
+                .thenReturn(new PageImpl<>(mockedUsers.subList(0, 1).stream()
+                        .map(user -> new User(
+                                user.getId(),
+                                user.getEmail(),
+                                user.getPassword(),
+                                user.getRole()
+                        )).toList()));
 
-        List<UserDTO> actual = userService.findAll(TEST_EMAIL);
+        List<UserDTO> actual = userService.findAll(1, TEST_EMAIL).getContent();
 
-        verify(userRepository).findByEmail(TEST_EMAIL);
+        verify(userRepository).findByEmail(pageRequest, TEST_EMAIL);
         assertThat(actual, is(expected));
     }
 
