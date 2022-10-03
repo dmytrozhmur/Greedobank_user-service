@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.integration;
+package integration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +8,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.jdbc.Sql;
 
-import static com.griddynamics.internship.userservice.integration.AuthenticationTest.signinUser;
-import static org.h2.engine.Constants.URL_FORMAT;
+import static integration.AuthenticationTest.signinUser;
 
 @Sql(value = "insert_first_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "clear_database.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)

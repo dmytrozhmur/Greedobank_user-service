@@ -28,6 +28,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Optional;
+
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 
@@ -35,6 +38,8 @@ import static com.griddynamics.internship.userservice.utils.ResponseMessages.USE
 public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    @Autowired
+    private PageRequestService pageService;
     @Autowired
     private RefreshmentService refreshmentService;
     @Autowired
@@ -47,8 +52,6 @@ public class UserService {
     private ResponseMapper responseMapper;
     @Autowired
     private JwtProcessor jwtProcessor;
-    @Autowired
-    private UserProps properties;
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -56,19 +59,17 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public UserPage findAll(int page) {
-        int usersPerPage = properties.getPageSize();
-        PageRequest pageRequest = PageRequest.of(page - 1, usersPerPage);
+    public UserPage findAll(Optional<Integer> page) {
+        PageRequest pageRequest = pageService.generatePageRequest(page);
+
         return responseMapper.usersToDTO(userRepository.findAll(pageRequest),
                                          pageRequest.getPageNumber(),
                                          pageRequest.getPageSize());
     }
 
-    public UserPage findAll(int page, String email) {
-        int usersPerPage = properties.getPageSize();
-        PageRequest pageRequest = PageRequest.of(page - 1, usersPerPage);
-        Page<User> user = userRepository.findByEmail(
-                pageRequest, email);
+    public UserPage findAll(Optional<Integer> page, String email) {
+        PageRequest pageRequest = pageService.generatePageRequest(page);
+        Page<User> user = userRepository.findByEmail(pageRequest, email);
         
         if(user.getNumberOfElements() == 0 && user.getTotalPages() > 0)
             throw new NonExistentDataException("Page wasn't found");

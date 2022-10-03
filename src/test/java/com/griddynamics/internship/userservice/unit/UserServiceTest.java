@@ -9,22 +9,17 @@ import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.repo.RoleRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.service.UserService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,28 +41,28 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-    private final static Role TEST_ROLE = new Role(1, RoleTitle.ROLE_ADMIN);
-
-    private final static String TEST_EMAIL = "dzhmur@griddynamics.com";
-    private static final int TEST_ID = 0;
+    protected final static Role TEST_ADMIN_ROLE = new Role(1, RoleTitle.ROLE_ADMIN);
+    protected final static String TEST_EMAIL = "dzhmur@griddynamics.com";
+    protected static final int TEST_ID = 0;
     public static final String TEST_PASSWORD = "password";
-    public static final int TEST_PAGE = 1;
+    @Value("${user-service.users.start-page}")
+    public int startPage = 1;
     @Value("${user-service.users.page-size}")
     private int pageSize;
     @MockBean
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
     @Autowired
-    private UserService userService;
+    protected UserService userService;
     @MockBean
-    private RoleRepository roleRepository;
-    private List<User> mockedUsers;
-    private static PageRequest pageRequest;
+    protected RoleRepository roleRepository;
+    protected List<User> mockedUsers;
+    protected static PageRequest pageRequest;
 
     @BeforeEach
     private void prepareData() {
-        pageRequest = PageRequest.of(TEST_PAGE - 1, pageSize);
+        pageRequest = PageRequest.of(startPage - 1, pageSize);
 
-        when(roleRepository.findByTitle(RoleTitle.defaultTitle())).thenReturn(TEST_ROLE);
+        when(roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)).thenReturn(TEST_ADMIN_ROLE);
         mockedUsers = new ArrayList<>(Arrays.asList(
                 new User(
                         TEST_ID,
@@ -75,7 +70,7 @@ public class UserServiceTest {
                         "Zhmur",
                         TEST_EMAIL,
                         TEST_PASSWORD,
-                        roleRepository.findByTitle(RoleTitle.defaultTitle())
+                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
                 ),
                 new User(
                         1,
@@ -83,23 +78,20 @@ public class UserServiceTest {
                         "Komiahina",
                         "ykomiahina@griddynamics.com",
                         TEST_PASSWORD,
-                        roleRepository.findByTitle(RoleTitle.defaultTitle())
+                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
                 )
         ));
     }
 
     @Test
     public void getAllUsers() {
-        Collection<UserDTO> expected = new ArrayList<>(Arrays.asList(
-                new UserDTO(TEST_ID, "Dmytro", "Zhmur", TEST_EMAIL, TEST_ROLE),
-                new UserDTO(1, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", TEST_ROLE)
-        ));
+        Collection<UserDTO> expected = getAllExpectedUsers();
 
         when(userRepository
                 .findAll(pageRequest))
                 .thenReturn(new PageImpl<>(mockedUsers));
 
-        Collection<UserDTO> actual = userService.findAll(TEST_PAGE).getContent();
+        Collection<UserDTO> actual = userService.findAll(Optional.of(startPage)).getContent();
 
         verify(userRepository).findAll(pageRequest);
         assertThat(actual, is(expected));
@@ -108,7 +100,7 @@ public class UserServiceTest {
     @Test
     public void getUsersByEmail() {
         List<UserDTO> expected = Collections.singletonList(
-                new UserDTO(TEST_ID, TEST_EMAIL, TEST_ROLE)
+                new UserDTO(TEST_ID, TEST_EMAIL, TEST_ADMIN_ROLE)
         );
 
         when(userRepository
@@ -121,7 +113,7 @@ public class UserServiceTest {
                                 user.getRole()
                         )).toList()));
 
-        List<UserDTO> actual = userService.findAll(1, TEST_EMAIL).getContent();
+        List<UserDTO> actual = userService.findAll(Optional.of(startPage), TEST_EMAIL).getContent();
 
         verify(userRepository).findByEmail(pageRequest, TEST_EMAIL);
         assertThat(actual, is(expected));
@@ -138,7 +130,7 @@ public class UserServiceTest {
                 newLastName,
                 newEmail,
                 TEST_PASSWORD,
-                TEST_ROLE
+                TEST_ADMIN_ROLE
         ));
 
         when(userRepository.existsById(TEST_ID)).thenReturn(true);
@@ -176,5 +168,12 @@ public class UserServiceTest {
         );
 
         assertThat(exception.getMessage(), is(USER_NOT_FOUND));
+    }
+
+    protected ArrayList<UserDTO> getAllExpectedUsers() {
+        return new ArrayList<>(Arrays.asList(
+                new UserDTO(TEST_ID, "Dmytro", "Zhmur", TEST_EMAIL, TEST_ADMIN_ROLE),
+                new UserDTO(1, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", TEST_ADMIN_ROLE)
+        ));
     }
 }

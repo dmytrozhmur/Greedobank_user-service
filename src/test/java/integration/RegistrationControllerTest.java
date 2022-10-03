@@ -1,27 +1,19 @@
-package com.griddynamics.internship.userservice.integration;
+package integration;
 
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
-import com.griddynamics.internship.userservice.controller.auth.RegistrationController;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import com.griddynamics.internship.userservice.model.user.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.griddynamics.internship.userservice.integration.AuthenticationTest.signinUser;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

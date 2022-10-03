@@ -8,5 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "user-service.users")
 public class UserProps {
-    private int pageSize = 5;
+    private int pageSize = 1;
+    private int startPage = 0;
 }

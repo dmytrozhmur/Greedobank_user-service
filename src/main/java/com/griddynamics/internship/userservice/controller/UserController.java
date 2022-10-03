@@ -37,11 +37,11 @@ import java.util.Collection;
 @Validated
 @RestController
 public class UserController {
-    public static final int FIRST_PAGE = 1;
     @Autowired
     private UserService userService;
 
     @GetMapping("/api/v1/users")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all users")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get user list",
@@ -55,15 +55,14 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
-    public ResponseEntity<Page<UserDTO>> getUserList(@RequestParam Optional<String> email,
-                                                @RequestParam Optional<Integer> page) {
+    public Page<UserDTO> getUserList(@RequestParam Optional<String> email,
+                                     @RequestParam Optional<Integer> page) {
         if(page.isPresent() && page.get() < 1)
             throw new NonExistentDataException("Page number must be positive non-null value");
 
-        UserPage users = email.isPresent()
-                ? userService.findAll(page.orElse(FIRST_PAGE), email.get())
-                : userService.findAll(page.orElse(FIRST_PAGE));
-        return ResponseEntity.ok(users);
+        return email.isPresent()
+                ? userService.findAll(page, email.get())
+                : userService.findAll(page);
     }
 
     @GetMapping("/api/v1/users/{id}")
