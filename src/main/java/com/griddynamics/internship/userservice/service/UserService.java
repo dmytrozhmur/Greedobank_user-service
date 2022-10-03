@@ -59,9 +59,7 @@ public class UserService {
     public UserPage findAll(int page) {
         int usersPerPage = properties.getPageSize();
         PageRequest pageRequest = PageRequest.of(page - 1, usersPerPage);
-        return responseMapper.usersToDTO(userRepository.findAll(pageRequest),
-                                         pageRequest.getPageNumber(),
-                                         pageRequest.getPageSize());
+        return responseMapper.usersToDTO(userRepository.findAll(pageRequest), pageRequest);
     }
 
     public UserPage findAll(int page, String email) {
@@ -75,9 +73,7 @@ public class UserService {
         else if(user.getTotalPages() == 0)
             throw new NonExistentDataException(USER_NOT_FOUND);
         
-        return responseMapper.usersToDTO(user,
-                                         pageRequest.getPageNumber(),
-                                         pageRequest.getPageSize());
+        return responseMapper.usersToDTO(user, pageRequest);
     }
 
     public UserDTO findUser(int id) {

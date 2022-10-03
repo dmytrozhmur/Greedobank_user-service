@@ -27,8 +27,8 @@ public class UserPage extends PageImpl<UserDTO> {
         super(content, PageRequest.of(number, size), totalElements);
     }
 
-    public UserPage(List<UserDTO> content, int pageNum, int pageSize, long total) {
-        super(content, PageRequest.of(pageNum, pageSize), total);
+    public UserPage(List<UserDTO> content, Pageable pageRequest, long total) {
+        super(content, pageRequest, total);
     }
 
     public UserPage(List<UserDTO> content) {

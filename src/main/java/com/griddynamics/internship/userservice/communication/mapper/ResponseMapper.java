@@ -12,11 +12,10 @@ import org.springframework.data.domain.Pageable;
 
 @Mapper(componentModel = "spring")
 public abstract class ResponseMapper {
-    public UserPage usersToDTO(Page<User> user, int pageNum, int pageSize) {
+    public UserPage usersToDTO(Page<User> user, Pageable pageRequest) {
         return new UserPage(
                 user.getContent().stream().map(UserDTO::new).toList(),
-                pageNum,
-                pageSize,
+                pageRequest,
                 user.getTotalElements()
         );
     }
