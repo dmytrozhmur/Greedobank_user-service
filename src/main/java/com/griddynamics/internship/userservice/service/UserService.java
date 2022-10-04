@@ -5,7 +5,6 @@ import com.griddynamics.internship.userservice.communication.mapper.ResponseMapp
 import com.griddynamics.internship.userservice.communication.mapper.PartialRequestMapper;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.communication.response.UserPage;
-import com.griddynamics.internship.userservice.component.holder.UserProps;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;

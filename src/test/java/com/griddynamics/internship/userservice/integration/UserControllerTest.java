@@ -1,4 +1,4 @@
-package integration;
+package com.griddynamics.internship.userservice.integration;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.communication.response.UserPage;
@@ -6,7 +6,6 @@ import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -21,8 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.List;
 
-import static integration.AuthenticationTest.signinUser;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -77,7 +74,7 @@ public class UserControllerTest extends IntegrationTest {
     }
     @Test
     public void getUserListInaccessible() {
-        httpHeaders.setBearerAuth(signinUser(restTemplate, port, USER_EMAIL, USER_PASSWORD).getAccessToken());
+        httpHeaders.setBearerAuth(AuthenticationTest.signinUser(restTemplate, port, USER_EMAIL, USER_PASSWORD).getAccessToken());
 
         JsonResponse<String> actualResponse = restTemplate.exchange(
                 targetUrl,

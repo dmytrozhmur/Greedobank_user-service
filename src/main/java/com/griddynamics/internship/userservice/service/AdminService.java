@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice.service;
 
 import com.griddynamics.internship.userservice.communication.mapper.ResponseMapper;
-import com.griddynamics.internship.userservice.component.holder.UserProps;
+import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.role.RoleTitle;
@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.griddynamics.internship.userservice.utils.PageRequests.generatePageRequest;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 
 @Service
 public class AdminService {
-    @Autowired
-    private PageRequestService pageService;
     @Autowired
     private ResponseMapper mapper;
     @Autowired
@@ -29,14 +28,16 @@ public class AdminService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public Page<UserDTO> findAll(Optional<Integer> page) {
-        PageRequest pageRequest = pageService.generatePageRequest(page);
+    public Page<UserDTO> findAll(int pageNum, int pageSize) {
+        PageRequest pageRequest = generatePageRequest(pageNum, pageSize);
         Role adminRole = roleRepository.findByTitle(RoleTitle.ROLE_ADMIN);
         Page<User> allAdmins = userRepository.findAllByRole(pageRequest, adminRole);
 
-        return mapper.usersToDTO(allAdmins,
-                                 pageRequest.getPageNumber(),
-                                 pageRequest.getPageSize());
+        return new UserPage(
+                mapper.usersToDTO(allAdmins.getContent()),
+                pageRequest,
+                allAdmins.getTotalElements()
+        );
     }
 
     public UserDTO findAdmin(int id) {

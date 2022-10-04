@@ -28,7 +28,7 @@ public class AdminServiceTest extends UserServiceTest {
                 .findAllByRole(pageRequest, adminRole))
                 .thenReturn(new PageImpl<>(mockedUsers));
 
-        Collection<UserDTO> actual = adminService.findAll(Optional.empty()).getContent();
+        Collection<UserDTO> actual = adminService.findAll(TEST_PAGE, TEST_PAGE_SIZE).getContent();
 
         verify(userRepository).findAllByRole(pageRequest, adminRole);
         assertThat(actual, is(expected));

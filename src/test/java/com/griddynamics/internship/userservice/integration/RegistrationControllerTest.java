@@ -1,4 +1,4 @@
-package integration;
+package com.griddynamics.internship.userservice.integration;
 
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
