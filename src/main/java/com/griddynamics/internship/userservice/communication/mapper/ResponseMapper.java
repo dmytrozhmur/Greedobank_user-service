@@ -10,15 +10,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
-public abstract class ResponseMapper {
-    public UserPage usersToDTO(Page<User> user, Pageable pageRequest) {
-        return new UserPage(
-                user.getContent().stream().map(UserDTO::new).toList(),
-                pageRequest,
-                user.getTotalElements()
-        );
-    }
-
-
+public interface ResponseMapper {
+    List<UserDTO> usersToDTO(List<User> users);
 }

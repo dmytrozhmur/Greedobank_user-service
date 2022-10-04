@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -53,6 +54,12 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public JsonResponse<String> bodyMissedError() {
         return new JsonResponse<>(INVALID_BODY);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public JsonResponse<String> urlParamMissedError() {
+        return new JsonResponse<>(INVALID_URL_PARAMS);
     }
 
     @ExceptionHandler(NonExistentDataException.class)

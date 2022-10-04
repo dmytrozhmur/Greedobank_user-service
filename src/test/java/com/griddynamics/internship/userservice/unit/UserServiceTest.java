@@ -52,8 +52,7 @@ public class UserServiceTest {
     private static final int TEST_ID = 0;
     public static final String TEST_PASSWORD = "password";
     public static final int TEST_PAGE = 1;
-    @Value("${user-service.users.page-size}")
-    private int pageSize;
+    private static final int TEST_PAGE_SIZE = 10;
     @MockBean
     private UserRepository userRepository;
     @Autowired
@@ -65,7 +64,7 @@ public class UserServiceTest {
 
     @BeforeEach
     private void prepareData() {
-        pageRequest = PageRequest.of(TEST_PAGE - 1, pageSize);
+        pageRequest = PageRequest.of(TEST_PAGE - 1, TEST_PAGE_SIZE);
 
         when(roleRepository.findByTitle(RoleTitle.defaultTitle())).thenReturn(TEST_ROLE);
         mockedUsers = new ArrayList<>(Arrays.asList(
@@ -99,7 +98,7 @@ public class UserServiceTest {
                 .findAll(pageRequest))
                 .thenReturn(new PageImpl<>(mockedUsers));
 
-        Collection<UserDTO> actual = userService.findAll(TEST_PAGE).getContent();
+        Collection<UserDTO> actual = userService.findAll(TEST_PAGE, TEST_PAGE_SIZE).getContent();
 
         verify(userRepository).findAll(pageRequest);
         assertThat(actual, is(expected));
@@ -121,7 +120,7 @@ public class UserServiceTest {
                                 user.getRole()
                         )).toList()));
 
-        List<UserDTO> actual = userService.findAll(1, TEST_EMAIL).getContent();
+        List<UserDTO> actual = userService.findAll(TEST_PAGE, TEST_PAGE_SIZE, TEST_EMAIL).getContent();
 
         verify(userRepository).findByEmail(pageRequest, TEST_EMAIL);
         assertThat(actual, is(expected));
