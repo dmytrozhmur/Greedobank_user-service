@@ -55,14 +55,14 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
-    public Page<UserDTO> getUserList(@RequestParam Optional<String> email,
-                                     @RequestParam Optional<Integer> page) {
-        if(page.isPresent() && page.get() < 1)
-            throw new NonExistentDataException("Page number must be positive non-null value");
+    public Page<UserDTO> getUserList(@RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = "5") int size,
+                                     @RequestParam Optional<String> email) {
+        if(page < 1) throw new NonExistentDataException("Page number must be positive non-null value");
 
-        return email.isPresent()
-                ? userService.findAll(page, email.get())
-                : userService.findAll(page);
+        return email.isEmpty()
+                ? userService.findAll(page, size)
+                : userService.findAll(page, size, email.get());
     }
 
     @GetMapping("/api/v1/users/{id}")

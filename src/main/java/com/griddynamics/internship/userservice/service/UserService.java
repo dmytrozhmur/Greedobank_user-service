@@ -28,18 +28,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.Optional;
-
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.PAGE_NOT_FOUND;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-    @Autowired
-    private PageRequestService pageService;
     @Autowired
     private RefreshmentService refreshmentService;
     @Autowired
@@ -59,26 +55,31 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public UserPage findAll(Optional<Integer> page) {
-        PageRequest pageRequest = pageService.generatePageRequest(page);
+    public UserPage findAll(int pageNum, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        Page<User> users = userRepository.findAll(pageRequest);
 
-        return responseMapper.usersToDTO(userRepository.findAll(pageRequest),
-                                         pageRequest.getPageNumber(),
-                                         pageRequest.getPageSize());
+        return new UserPage(
+                responseMapper.usersToDTO(users.getContent()),
+                pageRequest,
+                users.getTotalElements()
+        );
     }
 
-    public UserPage findAll(Optional<Integer> page, String email) {
-        PageRequest pageRequest = pageService.generatePageRequest(page);
+    public UserPage findAll(int pageNum, int pageSize, String email) {
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         Page<User> user = userRepository.findByEmail(pageRequest, email);
         
         if(user.getNumberOfElements() == 0 && user.getTotalPages() > 0)
-            throw new NonExistentDataException("Page wasn't found");
+            throw new NonExistentDataException(PAGE_NOT_FOUND);
         else if(user.getTotalPages() == 0)
             throw new NonExistentDataException(USER_NOT_FOUND);
         
-        return responseMapper.usersToDTO(user,
-                                         pageRequest.getPageNumber(),
-                                         pageRequest.getPageSize());
+        return new UserPage(
+                responseMapper.usersToDTO(user.getContent()),
+                pageRequest,
+                user.getTotalElements()
+        );
     }
 
     public UserDTO findUser(int id) {
