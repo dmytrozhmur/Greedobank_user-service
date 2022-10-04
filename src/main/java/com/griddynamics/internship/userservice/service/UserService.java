@@ -19,15 +19,12 @@ import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.PAGE_NOT_FOUND;
@@ -69,7 +66,7 @@ public class UserService {
 
     public UserPage findAll(int pageNum, int pageSize, String email) {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
-        Page<User> user = userRepository.findByEmail(pageRequest, email);
+        Page<User> user = userRepository.findAuthorizationInfoByEmail(pageRequest, email);
         
         if(user.getNumberOfElements() == 0 && user.getTotalPages() > 0)
             throw new NonExistentDataException(PAGE_NOT_FOUND);

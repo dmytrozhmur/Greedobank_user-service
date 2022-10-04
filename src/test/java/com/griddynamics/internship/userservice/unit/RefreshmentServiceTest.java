@@ -1,6 +1,5 @@
 package com.griddynamics.internship.userservice.unit;
 
-import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.model.role.Role;
 import com.griddynamics.internship.userservice.model.token.JwtRefreshment;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
@@ -51,7 +50,7 @@ public class RefreshmentServiceTest {
     private void mockRepo() {
         MockitoAnnotations.openMocks(this);
         when(userRepository
-                .findByEmail(Pageable.unpaged(), EMAIL_PARAMETER))
+                .findAuthorizationInfoByEmail(Pageable.unpaged(), EMAIL_PARAMETER))
                 .thenReturn(new PageImpl<>(Collections.singletonList(createTestUser())));
         when(refreshmentRepository.findByToken(TEST_REFRESH_TOKEN)).thenReturn(createTestToken());
     }
