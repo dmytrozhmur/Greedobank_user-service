@@ -35,7 +35,7 @@ public class RefreshmentService {
         Refreshment refreshment = new Refreshment(
                 UUID.randomUUID().toString(),
                 Instant.now().plusMillis(expiration),
-                userRepository.findByEmail(Pageable.unpaged(), email).getContent().get(0)
+                userRepository.findAuthorizationInfoByEmail(Pageable.unpaged(), email).getContent().get(0)
         );
         refreshmentRepository.save(refreshment);
         return refreshment;

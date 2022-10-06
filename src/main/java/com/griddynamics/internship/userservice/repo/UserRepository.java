@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "u.id, u.email, u.password, u.role) " +
             "from user u " +
             "where u.email = ?1")
-    Page<User> findByEmail(Pageable pageRequest, String email);
+    Page<User> findAuthorizationInfoByEmail(Pageable pageRequest, String email);
     Page<User> findAllByRole(Pageable pageRequest, Role role);
     Optional<User> findByIdAndRole(int id, Role role);
     boolean existsByEmail(@NonNull String email);

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
@@ -102,7 +101,7 @@ public class UserServiceTest {
         );
 
         when(userRepository
-                .findByEmail(pageRequest, TEST_EMAIL))
+                .findAuthorizationInfoByEmail(pageRequest, TEST_EMAIL))
                 .thenReturn(new PageImpl<>(mockedUsers.subList(0, 1).stream()
                         .map(user -> new User(
                                 user.getId(),
@@ -113,7 +112,7 @@ public class UserServiceTest {
 
         List<UserDTO> actual = userService.findAll(TEST_PAGE, TEST_PAGE_SIZE, TEST_EMAIL).getContent();
 
-        verify(userRepository).findByEmail(pageRequest, TEST_EMAIL);
+        verify(userRepository).findAuthorizationInfoByEmail(pageRequest, TEST_EMAIL);
         assertThat(actual, is(expected));
     }
 
