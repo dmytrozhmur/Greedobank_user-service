@@ -26,6 +26,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static com.griddynamics.internship.userservice.utils.PageRequests.generatePageRequest;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.PAGE_NOT_FOUND;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
@@ -54,7 +55,7 @@ public class UserService {
     }
 
     public UserPage findAll(int pageNum, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        PageRequest pageRequest = generatePageRequest(pageNum, pageSize);
         Page<User> users = userRepository.findAll(pageRequest);
 
         return new UserPage(
@@ -65,7 +66,7 @@ public class UserService {
     }
 
     public UserPage findAll(int pageNum, int pageSize, String email) {
-        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        PageRequest pageRequest = generatePageRequest(pageNum, pageSize);
         Page<User> user = userRepository.findAuthorizationInfoByEmail(pageRequest, email);
         
         if(user.getNumberOfElements() == 0 && user.getTotalPages() > 0)

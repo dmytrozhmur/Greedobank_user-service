@@ -12,14 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.griddynamics.internship.userservice.utils.PageRequests.checkPageParams;
+import javax.validation.constraints.Min;
 
+@Validated
 @RestController
 public class AdminController {
     @Autowired
@@ -38,9 +40,8 @@ public class AdminController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<UserDTO> getAdminList(@RequestParam(defaultValue = "1") int page,
-                                      @RequestParam(defaultValue = "5") int size) {
-        checkPageParams(page, size);
+    public Page<UserDTO> getAdminList(@RequestParam(defaultValue = "1") @Min(1) int page,
+                                      @RequestParam(defaultValue = "5") @Min(1) int size) {
         return adminService.findAll(page, size);
     }
 

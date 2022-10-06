@@ -53,8 +53,8 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
     public Page<UserDTO> getUserList(@RequestParam(defaultValue = "1") @Min(1) int page,
-                                                     @RequestParam(defaultValue = "5") @Min(1) int size,
-                                                     @RequestParam Optional<String> email) {
+                                     @RequestParam(defaultValue = "5") @Min(1) int size,
+                                     @RequestParam Optional<String> email) {
         UserPage users = email.isEmpty()
                 ? userService.findAll(page, size)
                 : userService.findAll(page, size, email.get());
