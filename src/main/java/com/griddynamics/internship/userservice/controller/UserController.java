@@ -4,7 +4,6 @@ import com.griddynamics.internship.userservice.communication.request.UserDataReq
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.communication.validation.OnUpsert;
-import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.service.UserService;
@@ -24,20 +23,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
-import java.util.Collection;
+import javax.validation.constraints.Min;
+import java.util.Optional;
 
 @Validated
 @RestController
 public class UserController {
-    public static final int FIRST_PAGE = 1;
     @Autowired
     private UserService userService;
 
@@ -55,11 +52,9 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
-    public ResponseEntity<Page<UserDTO>> getUserList(@RequestParam(defaultValue = "1") int page,
-                                                     @RequestParam(defaultValue = "5") int size,
+    public ResponseEntity<Page<UserDTO>> getUserList(@RequestParam(defaultValue = "1") @Min(1) int page,
+                                                     @RequestParam(defaultValue = "5") @Min(1) int size,
                                                      @RequestParam Optional<String> email) {
-        if(page < 1) throw new NonExistentDataException("Page number must be positive non-null value");
-
         UserPage users = email.isEmpty()
                 ? userService.findAll(page, size)
                 : userService.findAll(page, size, email.get());
