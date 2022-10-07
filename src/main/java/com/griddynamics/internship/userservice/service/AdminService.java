@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -27,6 +28,8 @@ public class AdminService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Page<UserDTO> findAll(int pageNum, int pageSize) {
         PageRequest pageRequest = generatePageRequest(pageNum, pageSize);
@@ -47,5 +50,9 @@ public class AdminService {
         return admin
                 .map(UserDTO::new)
                 .orElseThrow(() -> new NonExistentDataException(USER_NOT_FOUND));
+    }
+
+    public Page<UserDTO> findCardTemplates(int id) {
+        return null;
     }
 }

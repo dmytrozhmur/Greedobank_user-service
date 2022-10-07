@@ -64,4 +64,23 @@ public class AdminController {
         UserDTO admin = adminService.findAdmin(id);
         return new JsonResponse<>(admin);
     }
+
+    @GetMapping("/api/v1/admins/{id}/card_templates")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get card templates by admin id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Get admin",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unknown sender",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "403", description = "Access denied",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Admin not found",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<UserDTO> getAdminTemplates(@PathVariable("id") int id) {
+        return adminService.findCardTemplates(id);
+    }
 }
