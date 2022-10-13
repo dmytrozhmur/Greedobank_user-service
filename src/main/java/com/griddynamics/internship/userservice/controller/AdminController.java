@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
+import com.griddynamics.internship.userservice.model.card.CardTemplateDTO;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,7 +81,7 @@ public class AdminController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<UserDTO> getAdminTemplates(@PathVariable("id") int id) {
+    public Page<CardTemplateDTO> getAdminTemplates(@PathVariable("id") int id) {
         return adminService.findCardTemplates(id);
     }
 }

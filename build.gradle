@@ -21,7 +21,9 @@ jacocoTestReport {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
 					"com/griddynamics/internship/userservice/model/**/*",
-					"com/griddynamics/internship/userservice/communication/**/*"
+					"com/griddynamics/internship/userservice/communication/**/*",
+					"com/griddynamics/internship/userservice/component/processor/*",
+					"com/griddynamics/internship/userservice/utils/*"
 			])
 		}))
 	}
@@ -32,7 +34,9 @@ jacocoTestCoverageVerification {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
 					"com/griddynamics/internship/userservice/model/**/*",
-					"com/griddynamics/internship/userservice/communication/**/*"
+					"com/griddynamics/internship/userservice/communication/**/*",
+					"com/griddynamics/internship/userservice/component/processor/*",
+					"com/griddynamics/internship/userservice/utils/*"
 			])
 		}))
 	}

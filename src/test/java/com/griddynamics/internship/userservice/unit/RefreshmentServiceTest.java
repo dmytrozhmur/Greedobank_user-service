@@ -34,7 +34,7 @@ public class RefreshmentServiceTest {
     private static final String TEST_FIRSTNAME = "Dmytro";
     private static final String TEST_LASTNAME = "Zhmur";
     private static final String TEST_PASSWORD = "password";
-    private static final String TEST_REFRESH_TOKEN = "abcdef-ghijkl-mnopqr-stuvw-xyz";
+    public static final String TEST_REFRESH_TOKEN = "abcdef-ghijkl-mnopqr-stuvw-xyz";
     public static final String TOKEN_TYPE = "Bearer";
     private static final int TEST_ID = 1;
     @MockBean
