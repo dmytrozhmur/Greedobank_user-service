@@ -79,6 +79,8 @@ public class AdminServiceTest extends UserServiceTest {
         testHeaders.setBearerAuth(TEST_REFRESH_TOKEN);
         HttpEntity<String> testEntity = new HttpEntity<>(testHeaders);
 
+        when(userRepository.existsByIdAndRole(FIRST_TEST_ID, TEST_ADMIN_ROLE)).thenReturn(true);
+        when(userRepository.existsByIdAndRole(SECOND_TEST_ID, TEST_ADMIN_ROLE)).thenReturn(true);
         when(entityProcessor.generateEntityForCurrUserAuthorization())
                 .thenReturn(testEntity);
         when(restTemplate.exchange(templatesUrl, HttpMethod.GET, testEntity, CardTemplatePage.class))
