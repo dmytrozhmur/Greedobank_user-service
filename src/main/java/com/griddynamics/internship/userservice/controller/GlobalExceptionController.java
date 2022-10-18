@@ -55,7 +55,6 @@ public class GlobalExceptionController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public JsonResponse<String> bodyMissedError(HttpMessageNotReadableException e) {
-        log.error("Handled exception", e);
         return new JsonResponse<>(INVALID_BODY);
     }
 

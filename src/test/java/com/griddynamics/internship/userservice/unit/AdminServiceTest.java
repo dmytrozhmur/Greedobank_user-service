@@ -43,7 +43,7 @@ public class AdminServiceTest extends UserServiceTest {
     private RestTemplate restTemplate;
     @MockBean
     private RequestEntityProcessor entityProcessor;
-    @Value("${card-service.url.card-templates}")
+    @Value("${card-service.url.service}${card-service.url.card-templates-endpoint}")
     private String templatesUrl;
 
     @Test

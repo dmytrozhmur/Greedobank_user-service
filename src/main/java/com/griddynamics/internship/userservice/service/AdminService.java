@@ -44,7 +44,7 @@ public class AdminService {
     private RestTemplate restTemplate;
     @Autowired
     private RequestEntityProcessor entityProcessor;
-    @Value("${card-service.url.card-templates}")
+    @Value("${card-service.url.service}${card-service.url.card-templates-endpoint}")
     private String templatesUrl;
 
     public Page<UserDTO> findAll(int pageNum, int pageSize) {
@@ -74,15 +74,12 @@ public class AdminService {
 
         HttpEntity<String> httpEntity = entityProcessor
                 .generateEntityForCurrUserAuthorization();
-
-        log.info("Card service url = " + templatesUrl);
         List<CardTemplateDTO> templates = restTemplate.exchange(
                 templatesUrl,
                 HttpMethod.GET,
                 httpEntity,
                 CardTemplatePage.class
         ).getBody().getContent();
-        log.info("Templates for user with id {} are: {}", id, templates);
 
         return new CardTemplatePage(templates.stream().filter(el -> el.createdById() == id).toList());
     }
