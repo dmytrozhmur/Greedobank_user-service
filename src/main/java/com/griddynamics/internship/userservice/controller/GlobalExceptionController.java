@@ -3,8 +3,8 @@ package com.griddynamics.internship.userservice.controller;
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,16 +15,18 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.griddynamics.internship.userservice.utils.ResponseMessages.*;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.FAILURE;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.INVALID_BODY;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.INVALID_URL_PARAMS;
 import static java.util.stream.Collectors.groupingBy;
 
+@Slf4j
 @ResponseBody
 @ControllerAdvice
 public class GlobalExceptionController {
@@ -52,7 +54,7 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public JsonResponse<String> bodyMissedError() {
+    public JsonResponse<String> bodyMissedError(HttpMessageNotReadableException e) {
         return new JsonResponse<>(INVALID_BODY);
     }
 

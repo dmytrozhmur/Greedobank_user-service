@@ -51,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content(mediaType = "application/json"))
     })
-    @PreAuthorize("hasRole('ADMIN') or #email.present and isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') or #email.present")
     public Page<UserDTO> getUserList(@RequestParam(defaultValue = "1") @Min(1) int page,
                                      @RequestParam(defaultValue = "5") @Min(1) int size,
                                      @RequestParam Optional<String> email) {

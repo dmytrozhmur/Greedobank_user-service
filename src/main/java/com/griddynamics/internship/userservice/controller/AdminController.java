@@ -1,6 +1,7 @@
 package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
+import com.griddynamics.internship.userservice.model.card.CardTemplateDTO;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,5 +66,24 @@ public class AdminController {
     public JsonResponse<UserDTO> getAdminInfo(@PathVariable("id") int id) {
         UserDTO admin = adminService.findAdmin(id);
         return new JsonResponse<>(admin);
+    }
+
+    @GetMapping("/{id}/card_templates")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get card templates by admin id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Get admin",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unknown sender",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "403", description = "Access denied",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Admin not found",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<CardTemplateDTO> getAdminTemplates(@PathVariable("id") int id) {
+        return adminService.findCardTemplates(id);
     }
 }
