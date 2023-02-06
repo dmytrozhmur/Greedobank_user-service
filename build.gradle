@@ -1,0 +1,96 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+jacoco {
+	toolVersion = "0.8.8"
+	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = false
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"com/griddynamics/internship/userservice/model/**/*",
+					"com/griddynamics/internship/userservice/communication/**/*",
+					"com/griddynamics/internship/userservice/component/processor/*",
+					"com/griddynamics/internship/userservice/utils/*"
+			])
+		}))
+	}
+}
+
+jacocoTestCoverageVerification {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"com/griddynamics/internship/userservice/model/**/*",
+					"com/griddynamics/internship/userservice/communication/**/*",
+					"com/griddynamics/internship/userservice/component/processor/*",
+					"com/griddynamics/internship/userservice/utils/*"
+			])
+		}))
+	}
+
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8
+			}
+		}
+	}
+}
+
+group = 'com.griddynamics.internship'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '18'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation('org.flywaydb:flyway-core')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('mysql:mysql-connector-java')
+	implementation('org.flywaydb:flyway-mysql')
+	implementation('org.springframework.boot:spring-boot-starter-security:2.7.1')
+	implementation('org.springdoc:springdoc-openapi-ui:1.6.9')
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+	implementation('io.jsonwebtoken:jjwt:0.9.1')
+	implementation('junit:junit:4.13.1')
+	implementation("org.mapstruct:mapstruct:1.5.2.Final")
+
+	compileOnly('org.projectlombok:lombok:1.18.24')
+	annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+	annotationProcessor('org.projectlombok:lombok:1.18.24')
+	annotationProcessor('org.mapstruct:mapstruct-processor:1.5.2.Final')
+
+	testImplementation("com.h2database:h2:1.4.194")
+	testImplementation("org.springframework.security:spring-security-test:5.7.3")
+	testImplementation("org.hamcrest:hamcrest-core:2.2")
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+test.finalizedBy(jacocoTestReport)
+jacocoTestReport.finalizedBy(jacocoTestCoverageVerification)

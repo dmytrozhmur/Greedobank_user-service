@@ -1,0 +1,12 @@
+CREATE TABLE role (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(45)
+);
+
+INSERT INTO role (title) VALUES ('ROLE_ADMIN'), ('ROLE_USER');
+
+ALTER TABLE user
+    ADD COLUMN role_id INT,
+    ADD FOREIGN KEY (role_id) REFERENCES role (id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+UPDATE user SET user.role_id = 1 WHERE id < 6;

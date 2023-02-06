@@ -1,0 +1,26 @@
+version: "3.8"
+
+networks:
+  backend:
+    external: true
+
+services:
+  user-service-app:
+    build: .
+    networks:
+      - backend
+    restart: always
+    ports:
+      - 8082:8081
+    depends_on:
+      - user-service-db
+  user-service-db:
+    image: "mysql"
+    networks:
+      - backend
+    restart: always
+    ports:
+      - 6603:3306
+    environment:
+      MYSQL_DATABASE: user_service
+      MYSQL_ROOT_PASSWORD: root
