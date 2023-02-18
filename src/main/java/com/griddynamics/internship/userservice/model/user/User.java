@@ -39,7 +39,10 @@ public class User {
     @Column(name = "email") @NonNull private String email;
     @Column(name = "password") @NonNull private String password;
     @ManyToOne @JoinColumn(name = "role_id") @NonNull private Role role;
-    @ManyToMany private List<ChildAccount> children;
+    @ManyToMany
+    @JoinTable(name = "user_child",
+            inverseJoinColumns = @JoinColumn(name = "child_id"),
+            joinColumns = @JoinColumn(name = "user_id")) private List<ChildAccount> children;
 
     public User(int id, @NonNull String email, @NonNull String password, @NonNull Role role) {
         this.id = id;

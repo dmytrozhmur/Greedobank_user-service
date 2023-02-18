@@ -2,6 +2,7 @@ package com.griddynamics.internship.userservice.model.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.griddynamics.internship.userservice.model.child.ChildDTO;
 import com.griddynamics.internship.userservice.model.role.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -33,6 +35,8 @@ public class UserDTO {
     @NonNull private String email;
     @JsonProperty("role")
     @NonNull private Role role;
+
+    private List<ChildDTO> children;
 
     public UserDTO(User user) {
         this.id = user.getId();

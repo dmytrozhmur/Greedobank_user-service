@@ -15,4 +15,5 @@ public class ResponseMessages {
     public static final String INVALID_PASSWORD_LENGTH = "length must consists of 8 - 20 characters";
     public static final String INAPPROPRIATE_SIZE = "must contains from 1 till 45 characters";
     public static final String EMPTY_FIELD = "must be specified";
+    public static final String EMPTY_RESPONSE = "No data for these filters";
 }

@@ -19,5 +19,8 @@ public class ChildAccount {
 
     private Instant createdAt = Instant.now();
 
-    @ManyToMany private List<User> parents;
+    @ManyToMany
+    @JoinTable(name = "user_child",
+            inverseJoinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = @JoinColumn(name = "child_id")) private List<User> parents;
 }

@@ -1,6 +1,6 @@
 package com.griddynamics.internship.userservice.service;
 
-import com.griddynamics.internship.userservice.communication.mapper.ResponseMapper;
+import com.griddynamics.internship.userservice.communication.mapper.UserResponseMapper;
 import com.griddynamics.internship.userservice.communication.response.CardTemplatePage;
 import com.griddynamics.internship.userservice.communication.response.UserPage;
 import com.griddynamics.internship.userservice.component.processor.JwtProcessor;
@@ -35,7 +35,7 @@ public class AdminService {
     @Autowired
     private JwtProcessor jwtProcessor;
     @Autowired
-    private ResponseMapper mapper;
+    private UserResponseMapper mapper;
     @Autowired
     private UserRepository userRepository;
     @Autowired

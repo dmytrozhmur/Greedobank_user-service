@@ -3,6 +3,7 @@ package com.griddynamics.internship.userservice.communication.response;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.griddynamics.internship.userservice.model.child.ChildDTO;
 import com.griddynamics.internship.userservice.model.user.UserDTO;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -12,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UserPage extends PageImpl<UserDTO> {
+public class ChildrenPage extends PageImpl<ChildDTO> {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public UserPage(@JsonProperty("content") List<UserDTO> content,
+    public ChildrenPage(@JsonProperty("content") List<ChildDTO> content,
                     @JsonProperty("number") int number,
                     @JsonProperty("size") int size,
                     @JsonProperty("totalElements") Long totalElements,
@@ -28,15 +29,15 @@ public class UserPage extends PageImpl<UserDTO> {
         super(content, PageRequest.of(number, size), totalElements);
     }
 
-    public UserPage(List<UserDTO> content, Pageable pageRequest, long total) {
+    public ChildrenPage(List<ChildDTO> content, Pageable pageRequest, long total) {
         super(content, pageRequest, total);
     }
 
-    public UserPage(List<UserDTO> content) {
+    public ChildrenPage(List<ChildDTO> content) {
         super(content);
     }
 
-    public UserPage() {
+    public ChildrenPage() {
         super(Collections.emptyList());
     }
 }

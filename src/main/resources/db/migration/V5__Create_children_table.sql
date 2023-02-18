@@ -2,7 +2,7 @@ CREATE TABLE child_account (
     id INT AUTO_INCREMENT PRIMARY KEY,
     created_for_user INT,
     created_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (created_for_id) REFERENCES user(id)
+    FOREIGN KEY (created_for_user) REFERENCES user(id)
         ON UPDATE CASCADE ON DELETE SET NULL
 );
 

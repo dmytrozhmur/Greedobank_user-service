@@ -2,6 +2,7 @@ package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
 import com.griddynamics.internship.userservice.exception.EmailExistsException;
+import com.griddynamics.internship.userservice.exception.EmptyDataException;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -79,5 +80,11 @@ public class GlobalExceptionController {
                         "email",
                         new String[]{exception.getMessage()}
                 ));
+    }
+
+    @ExceptionHandler(EmptyDataException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public JsonResponse<String> emptyResponse(EmptyDataException exception) {
+        return new JsonResponse<>(exception.getMessage());
     }
 }

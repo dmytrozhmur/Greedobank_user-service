@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.FAILURE;
@@ -58,7 +59,8 @@ public class UserControllerTest {
                 "Dmytro",
                 NEW_LASTNAME,
                 NEW_EMAIL,
-                new Role(1, RoleTitle.ROLE_ADMIN)
+                new Role(1, RoleTitle.ROLE_ADMIN),
+                Collections.emptyList()
         );
         doAnswer((Answer<Object>) invocation -> {
             int id = invocation.getArgument(0);
@@ -68,7 +70,8 @@ public class UserControllerTest {
                     expected.getFirstName(),
                     request.getLastName(),
                     request.getEmail(),
-                    expected.getRole()
+                    expected.getRole(),
+                    Collections.emptyList()
             ));
             return null;
         }).when(userService).updateUser(any(Integer.class), any(UserDataRequest.class));

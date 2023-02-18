@@ -172,8 +172,8 @@ public class UserServiceTest {
 
     protected ArrayList<UserDTO> getAllExpectedUsers() {
         return new ArrayList<>(Arrays.asList(
-                new UserDTO(TEST_ID, "Dmytro", "Zhmur", TEST_EMAIL, TEST_ADMIN_ROLE),
-                new UserDTO(1, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", TEST_ADMIN_ROLE)
+                new UserDTO(TEST_ID, "Dmytro", "Zhmur", TEST_EMAIL, TEST_ADMIN_ROLE, Collections.emptyList()),
+                new UserDTO(1, "Yevheniia", "Komiahina", "ykomiahina@griddynamics.com", TEST_ADMIN_ROLE, Collections.emptyList())
         ));
     }
 }

@@ -1,7 +1,7 @@
 package com.griddynamics.internship.userservice.service;
 
 import com.griddynamics.internship.userservice.communication.mapper.FullRequestMapper;
-import com.griddynamics.internship.userservice.communication.mapper.ResponseMapper;
+import com.griddynamics.internship.userservice.communication.mapper.UserResponseMapper;
 import com.griddynamics.internship.userservice.communication.mapper.PartialRequestMapper;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.communication.response.UserPage;
@@ -44,7 +44,7 @@ public class UserService {
     @Autowired
     private FullRequestMapper createMapper;
     @Autowired
-    private ResponseMapper responseMapper;
+    private UserResponseMapper responseMapper;
     @Autowired
     private JwtProcessor jwtProcessor;
 

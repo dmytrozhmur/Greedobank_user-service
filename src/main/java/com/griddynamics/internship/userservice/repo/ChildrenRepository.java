@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ChildrenRepository extends JpaRepository<ChildAccount, Integer> {
-    Page<ChildAccount> findAllByParentsContains(Pageable pageRequest, User parent);
+    Page<ChildAccount> findAllByParentsIn(Pageable pageRequest, List<User> parents);
 }
