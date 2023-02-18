@@ -94,7 +94,8 @@ public class RefreshmentServiceTest {
                 TEST_LASTNAME,
                 EMAIL_PARAMETER,
                 TEST_PASSWORD,
-                createTestRole()
+                createTestRole(),
+                Collections.emptyList()
         );
     }
 }

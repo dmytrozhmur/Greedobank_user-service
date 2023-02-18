@@ -67,7 +67,8 @@ public class UserServiceTest {
                         "Zhmur",
                         TEST_EMAIL,
                         TEST_PASSWORD,
-                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
+                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN),
+                        Collections.emptyList()
                 ),
                 new User(
                         1,
@@ -75,7 +76,8 @@ public class UserServiceTest {
                         "Komiahina",
                         "ykomiahina@griddynamics.com",
                         TEST_PASSWORD,
-                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN)
+                        roleRepository.findByTitle(RoleTitle.ROLE_ADMIN),
+                        Collections.emptyList()
                 )
         ));
     }
@@ -127,7 +129,8 @@ public class UserServiceTest {
                 newLastName,
                 newEmail,
                 TEST_PASSWORD,
-                TEST_ADMIN_ROLE
+                TEST_ADMIN_ROLE,
+                Collections.emptyList()
         ));
 
         when(userRepository.existsById(TEST_ID)).thenReturn(true);
