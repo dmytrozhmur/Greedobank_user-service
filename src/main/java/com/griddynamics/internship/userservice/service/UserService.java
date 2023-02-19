@@ -1,13 +1,13 @@
 package com.griddynamics.internship.userservice.service;
 
-import com.griddynamics.internship.userservice.communication.mapper.FullRequestMapper;
+import com.griddynamics.internship.userservice.communication.mapper.FullUserRequestMapper;
 import com.griddynamics.internship.userservice.communication.mapper.UserResponseMapper;
-import com.griddynamics.internship.userservice.communication.mapper.PartialRequestMapper;
+import com.griddynamics.internship.userservice.communication.mapper.PartialUserRequestMapper;
 import com.griddynamics.internship.userservice.communication.request.SigninRequest;
 import com.griddynamics.internship.userservice.communication.response.UserPage;
-import com.griddynamics.internship.userservice.exception.EmailExistsException;
 import com.griddynamics.internship.userservice.communication.request.UserDataRequest;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
+import com.griddynamics.internship.userservice.exception.UniqueConstraintViolation;
 import com.griddynamics.internship.userservice.model.token.Refreshment;
 import com.griddynamics.internship.userservice.model.user.JwtUser;
 import com.griddynamics.internship.userservice.model.user.User;
@@ -26,13 +26,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
+
+import java.util.Collections;
+import java.util.Set;
+
 import static com.griddynamics.internship.userservice.utils.PageRequests.generatePageRequest;
-import static com.griddynamics.internship.userservice.utils.ResponseMessages.EMAIL_IN_USE;
+import static com.griddynamics.internship.userservice.utils.ResponseMessages.NOT_UNIQUE;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.PAGE_NOT_FOUND;
 import static com.griddynamics.internship.userservice.utils.ResponseMessages.USER_NOT_FOUND;
 
 @Service
 public class UserService {
+    private static final String UNIQUE_IDENTIFIER = "email";
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     @Autowired
@@ -40,9 +46,9 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private PartialRequestMapper updateMapper;
+    private PartialUserRequestMapper updateMapper;
     @Autowired
-    private FullRequestMapper createMapper;
+    private FullUserRequestMapper createMapper;
     @Autowired
     private UserResponseMapper responseMapper;
     @Autowired
@@ -129,7 +135,10 @@ public class UserService {
     }
 
     private void checkEmail(UserDataRequest signup) {
-        if(userRepository.existsByEmail(signup.getEmail()))
-            throw new EmailExistsException(EMAIL_IN_USE);
+        if(userRepository.existsByEmail(signup.getEmail())) {
+            Set<UniqueConstraintViolation> violation = Collections
+                    .singleton(new UniqueConstraintViolation(UNIQUE_IDENTIFIER, NOT_UNIQUE));
+            throw new ConstraintViolationException(violation);
+        }
     }
 }

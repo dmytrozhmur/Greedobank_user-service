@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,15 +17,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT_PAGE_NUM;
 import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT_PAGE_SIZE;
 
-@RestController("/api/v1/children")
+@RestController
 public class ChildrenController {
     @Autowired
     private ChildrenService childrenService;
 
-    @GetMapping
+    @GetMapping("/children")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get children by parents ids")
     @ApiResponses({
@@ -39,7 +42,7 @@ public class ChildrenController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public ChildrenPage getChildren(@RequestParam(name = "userId") int[] userIds,
+    public ChildrenPage getChildren(@RequestParam(name = "parentId", defaultValue = StringUtils.EMPTY) int[] userIds,
                                     @RequestParam(defaultValue = DEFAULT_PAGE_NUM) int page,
                                     @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
         return childrenService.findChildren(userIds, page, size);

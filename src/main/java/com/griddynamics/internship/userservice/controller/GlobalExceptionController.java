@@ -1,8 +1,6 @@
 package com.griddynamics.internship.userservice.controller;
 
 import com.griddynamics.internship.userservice.communication.response.JsonResponse;
-import com.griddynamics.internship.userservice.exception.EmailExistsException;
-import com.griddynamics.internship.userservice.exception.EmptyDataException;
 import com.griddynamics.internship.userservice.exception.NonExistentDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -68,23 +65,6 @@ public class GlobalExceptionController {
     @ExceptionHandler(NonExistentDataException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public JsonResponse<String> lackingDataError(NonExistentDataException exception) {
-        return new JsonResponse<>(exception.getMessage());
-    }
-
-    @ExceptionHandler(EmailExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public JsonResponse<String> emailRepetitionError(EmailExistsException exception) {
-        return new JsonResponse<>(
-                FAILURE,
-                Collections.singletonMap(
-                        "email",
-                        new String[]{exception.getMessage()}
-                ));
-    }
-
-    @ExceptionHandler(EmptyDataException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public JsonResponse<String> emptyResponse(EmptyDataException exception) {
         return new JsonResponse<>(exception.getMessage());
     }
 }

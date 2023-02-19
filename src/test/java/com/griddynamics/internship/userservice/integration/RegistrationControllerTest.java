@@ -56,7 +56,7 @@ public class RegistrationControllerTest extends IntegrationTest {
         User actualRegistered = userRepository
                 .findById(EXPECTED_ID).get();
 
-        assertEquals(SUCCESS, actualMessage);
+        assertEquals(REGISTERED, actualMessage);
         assertEquals(TEST_FIRSTNAME, actualRegistered.getFirstName());
         assertEquals(TEST_LASTNAME, actualRegistered.getLastName());
     }
@@ -108,7 +108,7 @@ public class RegistrationControllerTest extends IntegrationTest {
         Map<String, String[]> actualErrors = actualResponse.getErrors();
 
         assertEquals(FAILURE, actualMessage);
-        assertEquals(EMAIL_IN_USE, actualErrors.get("email")[0]);
+        assertEquals(NOT_UNIQUE, actualErrors.get("email")[0]);
     }
 
     @Override

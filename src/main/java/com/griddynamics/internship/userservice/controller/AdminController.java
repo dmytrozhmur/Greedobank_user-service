@@ -28,7 +28,7 @@ import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/admins")
+@RequestMapping("/admins")
 public class AdminController {
     @Autowired
     private AdminService adminService;

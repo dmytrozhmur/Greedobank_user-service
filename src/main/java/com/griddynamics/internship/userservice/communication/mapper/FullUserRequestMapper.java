@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static com.griddynamics.internship.userservice.model.role.RoleTitle.defaultTitle;
 
 @Mapper(componentModel = "spring")
-public abstract class FullRequestMapper {
+public abstract class FullUserRequestMapper {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired

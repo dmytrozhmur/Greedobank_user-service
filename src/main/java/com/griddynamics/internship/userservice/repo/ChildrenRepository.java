@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ChildrenRepository extends JpaRepository<ChildAccount, Integer> {
-    Page<ChildAccount> findAllByParentsIn(Pageable pageRequest, List<User> parents);
+    List<ChildAccount> findAllByParentsIn(Pageable pageRequest, List<User> parents);
+    boolean existsByLogin(String login);
 }

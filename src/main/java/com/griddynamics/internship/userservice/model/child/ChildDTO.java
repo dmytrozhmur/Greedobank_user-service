@@ -10,7 +10,8 @@ import java.util.List;
 @Data
 public class ChildDTO {
     private Integer id;
-    private User createdForUser;
-    private Instant instant;
+    private String login;
+    private String contactDetails;
+    private Instant createdAt;
     private List<UserDTO> parents;
 }

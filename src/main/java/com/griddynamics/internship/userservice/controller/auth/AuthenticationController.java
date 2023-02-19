@@ -32,7 +32,7 @@ public class AuthenticationController {
     @Autowired
     private RefreshmentService refreshmentService;
 
-    @PostMapping("/api/v1/signin")
+    @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Authenticate user")
     @ApiResponses({
@@ -52,7 +52,7 @@ public class AuthenticationController {
         return new JsonResponse<>(jwtUser);
     }
 
-    @PostMapping("/api/v1/refreshToken")
+    @PostMapping("/refreshToken")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get new access token")
     @ApiResponses({
