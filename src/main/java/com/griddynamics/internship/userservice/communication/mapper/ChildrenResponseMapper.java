@@ -19,10 +19,9 @@ public abstract class ChildrenResponseMapper {
         List<ChildDTO> mappedUsers = new ArrayList<>();
         for (ChildAccount child : children) {
             ChildDTO childDTO = childToDTO(child);
-            List<UserDTO> parentsDTO = children.stream()
-                    .map(ChildAccount::getParents)
-                    .flatMap(List::stream)
-                    .map(userMapper::userToDTO).toList();
+            List<UserDTO> parentsDTO = child.getParents().stream()
+                    .map(userMapper::userToDTO)
+                    .toList();
             childDTO.setParents(parentsDTO);
             mappedUsers.add(childDTO);
         }
