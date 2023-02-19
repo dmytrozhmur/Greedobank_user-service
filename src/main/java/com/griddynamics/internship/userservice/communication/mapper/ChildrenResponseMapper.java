@@ -6,12 +6,14 @@ import com.griddynamics.internship.userservice.model.user.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public abstract class ChildrenResponseMapper {
+    @Lazy
     @Autowired
     private UserResponseMapper userMapper;
 
