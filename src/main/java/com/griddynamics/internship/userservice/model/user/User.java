@@ -13,6 +13,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,7 +43,8 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_child",
             inverseJoinColumns = @JoinColumn(name = "child_id"),
-            joinColumns = @JoinColumn(name = "user_id")) private List<ChildAccount> children;
+            joinColumns = @JoinColumn(name = "user_id"))
+    private List<ChildAccount> children = new ArrayList<>();
 
     public User(int id, @NonNull String email, @NonNull String password, @NonNull Role role) {
         this.id = id;
