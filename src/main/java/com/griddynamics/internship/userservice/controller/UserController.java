@@ -31,6 +31,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.Optional;
 
+import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT_PAGE_NUM;
+import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT_PAGE_SIZE;
+
 @Validated
 @RestController
 public class UserController {
@@ -52,8 +55,8 @@ public class UserController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN') or #email.present")
-    public Page<UserDTO> getUserList(@RequestParam(defaultValue = "1") @Min(1) int page,
-                                     @RequestParam(defaultValue = "5") @Min(1) int size,
+    public Page<UserDTO> getUserList(@RequestParam(defaultValue = DEFAULT_PAGE_NUM) @Min(1) int page,
+                                     @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Min(1) int size,
                                      @RequestParam Optional<String> email) {
         UserPage users = email.isEmpty()
                 ? userService.findAll(page, size)

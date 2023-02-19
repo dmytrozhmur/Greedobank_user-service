@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
 
+import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT_PAGE_NUM;
+import static com.griddynamics.internship.userservice.utils.PageRequests.DEFAULT_PAGE_SIZE;
+
 @Validated
 @RestController
 @RequestMapping("/api/v1/admins")
@@ -43,8 +46,8 @@ public class AdminController {
                     content = @Content(mediaType = "application/json"))
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<UserDTO> getAdminList(@RequestParam(defaultValue = "1") @Min(1) int page,
-                                      @RequestParam(defaultValue = "5") @Min(1) int size) {
+    public Page<UserDTO> getAdminList(@RequestParam(defaultValue = DEFAULT_PAGE_NUM) @Min(1) int page,
+                                      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Min(1) int size) {
         return adminService.findAll(page, size);
     }
 

@@ -26,7 +26,7 @@ public class ChildrenController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get user by id")
+    @Operation(summary = "Get children by parents ids")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get children",
                     content = @Content(mediaType = "application/json",
