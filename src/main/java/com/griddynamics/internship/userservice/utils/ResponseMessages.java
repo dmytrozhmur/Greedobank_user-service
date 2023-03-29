@@ -5,7 +5,8 @@ public class ResponseMessages {
     public static final String FAILURE = "Action wasn't completed.";
     public static final String INVALID_BODY = "Body wasn't properly specified.";
     public static final String INVALID_URL_PARAMS = "Path variables wasn't properly specified";
-    public static final String USER_NOT_FOUND = "User doesn't exist";
+    public static final String USER_NOT_FOUND = "User(s) doesn't exist";
+    public static final String CHILD_NOT_FOUND = "Child doesn't exist";
     public static final String ADMIN_NOT_FOUND = "Admin doesn't exist";
     public static final String PAGE_NOT_FOUND = "Page wasn't found";
     public static final String UNEXPECTED = "Something went wrong.";

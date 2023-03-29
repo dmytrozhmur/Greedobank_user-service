@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @EqualsAndHashCode
@@ -16,13 +17,17 @@ public class UserWrapper implements UserDetails {
         this.user = user;
     }
 
-    public long getId() {
+    public int getId() {
         return user.getId();
+    }
+
+    public User getUser() {
+        return user.clone();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(
+        return Collections.singletonList(
                 new SimpleGrantedAuthority(user.getRole().getTitle().name()));
     }
 

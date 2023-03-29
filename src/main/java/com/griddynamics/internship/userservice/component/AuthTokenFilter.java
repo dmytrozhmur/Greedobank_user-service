@@ -1,4 +1,4 @@
-package com.griddynamics.internship.userservice.config.security;
+package com.griddynamics.internship.userservice.component;
 
 import com.griddynamics.internship.userservice.model.user.UserWrapper;
 import com.griddynamics.internship.userservice.component.processor.JwtProcessor;

@@ -1,5 +1,6 @@
-package com.griddynamics.internship.userservice.config.security;
+package com.griddynamics.internship.userservice.config;
 
+import com.griddynamics.internship.userservice.component.AuthTokenFilter;
 import com.griddynamics.internship.userservice.component.handler.MissedAuthenticationPoint;
 import com.griddynamics.internship.userservice.component.handler.UnsuitableRoleHandler;
 import org.springframework.beans.factory.annotation.Autowired;

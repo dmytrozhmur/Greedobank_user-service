@@ -22,7 +22,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class User {
+public class User implements Cloneable {
     @Id
     @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
@@ -66,5 +66,16 @@ public class User {
     @Override
     public int hashCode() {
         return 43 * email.length();
+    }
+
+    @Override
+    public User clone() {
+        try {
+            User clone = (User) super.clone();
+            clone.setChildren(null);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

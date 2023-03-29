@@ -6,7 +6,9 @@ import com.griddynamics.internship.userservice.communication.request.ChildrenDat
 import com.griddynamics.internship.userservice.communication.response.ChildrenPage;
 import com.griddynamics.internship.userservice.exception.*;
 import com.griddynamics.internship.userservice.model.child.ChildAccount;
+import com.griddynamics.internship.userservice.model.child.ChildDTO;
 import com.griddynamics.internship.userservice.model.user.User;
+import com.griddynamics.internship.userservice.model.user.UserDTO;
 import com.griddynamics.internship.userservice.repo.ChildrenRepository;
 import com.griddynamics.internship.userservice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,12 @@ public class ChildrenService {
         childrenRepository.save(childAccount);
     }
 
+    public ChildDTO findChild(int id) {
+        ChildAccount child = childrenRepository.findById(id)
+                .orElseThrow(() -> new NonExistentDataException(CHILD_NOT_FOUND));
+        return responseMapper.childrenToDTO(Collections.singletonList(child)).get(0);
+    }
+
     private void checkLogin(String login) {
         if(childrenRepository.existsByLogin(login)) {
             Set<UniqueConstraintViolation> violation = Collections
@@ -66,10 +74,9 @@ public class ChildrenService {
         }
     }
 
-    private void checkIds(int[] userIds) {
-        boolean notExistingUsers = !userRepository.existsByIdIn(Arrays.stream(userIds)
-                .boxed()
-                .toList());
-        if(userIds.length > 0 && notExistingUsers) throw new NonExistentDataException(USER_NOT_FOUND);
+    public void checkIds(int... userIds) {
+        boolean notExistingUsers = !userRepository
+                .existsByIdIn(Arrays.stream(userIds).boxed().toList());
+        if (userIds.length > 0 && notExistingUsers) throw new NonExistentDataException(USER_NOT_FOUND);
     }
 }

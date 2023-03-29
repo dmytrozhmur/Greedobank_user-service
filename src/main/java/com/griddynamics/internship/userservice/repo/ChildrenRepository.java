@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface ChildrenRepository extends JpaRepository<ChildAccount, Integer> {
     List<ChildAccount> findAllByParentsIn(Pageable pageRequest, List<User> parents);
+    boolean existsByIdAndParentsContaining(int id, User parent);
     boolean existsByLogin(String login);
 }
